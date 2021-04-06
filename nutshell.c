@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "nutshparser.tab.h"
 
 
 int main(void){
