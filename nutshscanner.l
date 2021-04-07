@@ -29,6 +29,9 @@ bool ifAlias(char* name){
 
 CHAR            [.A-Za-z0-9!\/_-][.A-Za-z0-9!\/_-]*
 ANYCHAR            [)(*&%$#@!`;,\.a-zA-Z0-9'/*_=~ -][)(*&%$#@!`;,\.a-zA-Z0-9'/*_=~ -]*
+PIPE_BAR [|]
+PIPE_GRTR [>]
+PIPE_LESS [<]
 SETENV "setenv" 
 PRINTENV "printenv"  
 HOME "HOME"
@@ -48,6 +51,10 @@ VARIABLE [A-Za-z][A-Za-z0-9]*
 bye                 { return BYE; }
 cd		            { return CD;}
 alias		        { return ALIAS; }
+{PIPE_BAR}          { return PIPE_BAR; }
+{PIPE_GRTR}         { return PIPE_GRTR; }
+{PIPE_LESS}         { return PIPE_LESS; }
+{PRINTENV}          { return PRINTENV;}
 "\n"		        { return END; }
 [\"]                 { BEGIN(string_condition); }
 {CHAR}+              {if(ifAlias(yytext)) {
@@ -63,10 +70,4 @@ alias		        { return ALIAS; }
                         return STRING;
                     };
                      }
-{SETENV}""{VARIABLE}""{WORD}  		{printf("set the value of variable to word");}
-{PRINTENV}																	{printf("print the values of all the environment variables");}																	{printf("shows the list of paths to be searched to find a command's executable file");}
-"alias"			{printf("alias");}
-"unalias"		{printf("unalias");}
-"bye"			{printf("bye");}
-.				{printf("empty character");}
 %%

@@ -17,13 +17,24 @@ int runSetAlias(char *name, char *word);
 %union {char *string;}
 
 %start cmd_line
-%token <string> BYE CD STRING ALIAS END
+%token <string> BYE CD STRING ALIAS END SETENV PRINTENV UNSETENV UNALIAS LS WC VARIABLE PIPE_BAR PIPE_GRTR PIPE_LESS
 
 %%
 cmd_line    :
 	BYE END 		                {exit(1); return 1; }
 	| CD STRING END        			{runCD($2); return 1;}
 	| ALIAS STRING STRING END		{runSetAlias($2, $3); return 1;}
+    | SETENV VARIABLE STRING END    {printf("setenv");}  
+    | STRING PIPE_BAR STRING END    {printf("bar_pipe");}
+    | STRING PIPE_GRTR STRING END   {printf("greater_pipe");}
+    | STRING PIPE_LESS STRING END   {printf("less_pipe");}
+    | PRINTENV END                  {printf("setenv");}
+    | UNSETENV VARIABLE END         {printf("setenv");}
+    | UNALIAS STRING                {printf("setenv");}
+    | ALIAS                         {printf("setenv");}
+    | LS                            {printf("setenv");}
+    | WC                            {printf("setenv");}
+
 
 %%
 

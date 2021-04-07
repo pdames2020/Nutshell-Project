@@ -39,3 +39,9 @@ int main()
 
    return 0;
 }
+// {SETENV}""{VARIABLE}""{WORD}  		{printf("set the value of variable to word");}
+// {PRINTENV}							{printf("print the values of all the environment variables");}																
+// "alias"			{printf("alias");}
+// "unalias"		{printf("unalias");}
+// "bye"			{printf("bye");}
+// .				{printf("empty character");}
