@@ -36,26 +36,6 @@
 /* Tokens.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-<<<<<<< Updated upstream
-  enum yytokentype
-  {
-    BYE = 258,
-    CD = 259,
-    STRING = 260,
-    ALIAS = 261,
-    END = 262,
-    SETENV = 263,
-    PRINTENV = 264,
-    UNSETENV = 265,
-    UNALIAS = 266,
-    LS = 267,
-    WC = 268,
-    VARIABLE = 269,
-    PIPE_BAR = 270,
-    PIPE_GRTR = 271,
-    PIPE_LESS = 272
-  };
-=======
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
@@ -75,7 +55,6 @@
      PIPE_GRTR = 271,
      PIPE_LESS = 272
    };
->>>>>>> Stashed changes
 #endif
 /* Tokens.  */
 #define BYE 258
@@ -94,18 +73,7 @@
 #define PIPE_GRTR 271
 #define PIPE_LESS 272
 
-<<<<<<< Updated upstream
-/* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
-#line 17 "nutshparser.y"
-char *string;
 
-#line 78 "nutshparser.tab.h"
-=======
-
->>>>>>> Stashed changes
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

@@ -7,60 +7,42 @@
 #include <unistd.h>
 #include <string.h>
 #include "global.h"
-<<<<<<< Updated upstream
-=======
 
 extern char **environ;
->>>>>>> Stashed changes
 
 int yylex(void);
 int yyerror(char *s);
 int runCD(char* arg);
 int runSetAlias(char *name, char *word);
-<<<<<<< Updated upstream
-=======
 int runCDHome();
 int printAlias();
 int runSetenv(char *variable, char *word);
 int printenv();
 
->>>>>>> Stashed changes
 %}
 
 %union {char *string;}
 
 %start cmd_line
-<<<<<<< Updated upstream
-%token <string> BYE CD STRING ALIAS END SETENV PRINTENV UNSETENV UNALIAS LS WC VARIABLE PIPE_BAR PIPE_GRTR PIPE_LESS
-=======
 %token <string> BYE CD STRING ALIAS END SETENV PRINTENV UNSETENV UNALIAS LS WC VARIABLE PIPE_BAR PIPE_GRTR PIPE_LESS 
->>>>>>> Stashed changes
 
 %%
 cmd_line    :
 	BYE END 		                {exit(1); return 1; }
 	| CD							{runCDHome();}
-	| CD STRING          			{runCD($2);}
+	| CD STRING END         		{runCD($2);}
 	| ALIAS STRING STRING END		{runSetAlias($2, $3); return 1;}
-<<<<<<< Updated upstream
-    | SETENV VARIABLE STRING END    {printf("setenv");}  
-    | STRING PIPE_BAR STRING END    {printf("bar_pipe");}
-    | STRING PIPE_GRTR STRING END   {printf("greater_pipe");}
-    | STRING PIPE_LESS STRING END   {printf("less_pipe");}
-    | PRINTENV END                  {printf("setenv");}
-=======
-    | SETENV STRING STRING END    {runSetenv($2, $3);}  
+    | SETENV STRING STRING    {runSetenv($2, $3);}  
     | STRING PIPE_BAR STRING END    {printf("bar_pipe");}
     | STRING PIPE_GRTR STRING END   {printf("greater_pipe");}
     | STRING PIPE_LESS STRING END   {printf("less_pipe");}
     | PRINTENV END                  {printenv();}
->>>>>>> Stashed changes
     | UNSETENV VARIABLE END         {printf("setenv");}
     | UNALIAS STRING                {printf("setenv");}
     | ALIAS                         {printf("setenv");}
     | LS                            {printf("setenv");}
     | WC                            {printf("setenv");}
-
+ 
 
 %%
 
@@ -70,7 +52,7 @@ int yyerror(char *s) {
   }
   
 int runCDHome(){
-	chdir("/Nutshell-Project/");
+	chdir("Nutshell-Project");
 	return 1;
 }
 
@@ -121,12 +103,11 @@ int runSetAlias(char *name, char *word) {
 	aliasIndex++;
 
 	return 1;
-<<<<<<< Updated upstream
-}
-=======
 }
 
 int runSetenv(char *variable, char *word) {
+
+	printf("hello");
 	for (int i = 0; i < varIndex; i++) {
 		if(strcmp(variable, word) == 0){
 			printf("Error: variable and word are the same value\n");
@@ -153,7 +134,6 @@ int printenv(){
 		printf("%s = %s\n", varTable.var[i], varTable.word[i]);
 	}
 	return 1;
-
 }	
 
 int printAlias(){
@@ -175,4 +155,3 @@ int printAlias(){
 	
 	
 
->>>>>>> Stashed changes

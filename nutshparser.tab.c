@@ -114,11 +114,8 @@
 #include <unistd.h>
 #include <string.h>
 #include "global.h"
-<<<<<<< Updated upstream
-=======
 
 extern char **environ;
->>>>>>> Stashed changes
 
 int yylex(void);
 int yyerror(char *s);
@@ -129,11 +126,7 @@ int printAlias();
 int runSetenv(char *variable, char *word);
 int printenv();
 
-<<<<<<< Updated upstream
-#line 86 "nutshparser.tab.c"
-=======
 
->>>>>>> Stashed changes
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -148,60 +141,12 @@ int printenv();
 # define YYERROR_VERBOSE 0
 #endif
 
-<<<<<<< Updated upstream
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_YY_NUTSHPARSER_TAB_H_INCLUDED
-# define YY_YY_NUTSHPARSER_TAB_H_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
-#if YYDEBUG
-extern int yydebug;
-#endif
-
-/* Token type.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
-  {
-    BYE = 258,
-    CD = 259,
-    STRING = 260,
-    ALIAS = 261,
-    END = 262,
-    SETENV = 263,
-    PRINTENV = 264,
-    UNSETENV = 265,
-    UNALIAS = 266,
-    LS = 267,
-    WC = 268,
-    VARIABLE = 269,
-    PIPE_BAR = 270,
-    PIPE_GRTR = 271,
-    PIPE_LESS = 272
-  };
-=======
 /* Enabling the token table.  */
 #ifndef YYTOKEN_TABLE
 # define YYTOKEN_TABLE 0
->>>>>>> Stashed changes
 #endif
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-<<<<<<< Updated upstream
-union YYSTYPE
-{
-#line 17 "nutshparser.y"
-char *string;
-
-#line 159 "nutshparser.tab.c"
-
-};
-typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-=======
 typedef union YYSTYPE
 #line 24 "nutshparser.y"
 {char *string;}
@@ -209,7 +154,6 @@ typedef union YYSTYPE
 #line 155 "nutshparser.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
->>>>>>> Stashed changes
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
@@ -435,34 +379,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  22
 /* YYLAST -- Last index in YYTABLE.  */
-<<<<<<< Updated upstream
-#define YYLAST   35
-=======
 #define YYLAST   34
->>>>>>> Stashed changes
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  18
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  2
 /* YYNRULES -- Number of rules.  */
-<<<<<<< Updated upstream
-#define YYNRULES  14
-/* YYNSTATES -- Number of states.  */
-#define YYNSTATES  35
-=======
 #define YYNRULES  15
 /* YYNRULES -- Number of states.  */
 #define YYNSTATES  34
->>>>>>> Stashed changes
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   272
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -505,19 +435,15 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     6,     8,    11,    16,    21,    26,    31,
+       0,     0,     3,     6,     8,    12,    17,    21,    26,    31,
       36,    39,    43,    46,    48,    50
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-<<<<<<< Updated upstream
-       0,    24,    24,    25,    26,    27,    28,    29,    30,    31,
-      32,    33,    34,    35,    36
-=======
       19,     0,    -1,     3,     7,    -1,     4,    -1,     4,     5,
-      -1,     6,     5,     5,     7,    -1,     8,     5,     5,     7,
+       7,    -1,     6,     5,     5,     7,    -1,     8,     5,     5,
       -1,     5,    15,     5,     7,    -1,     5,    16,     5,     7,
       -1,     5,    17,     5,     7,    -1,     9,     7,    -1,    10,
       14,     7,    -1,    11,     5,    -1,     6,    -1,    12,    -1,
@@ -529,7 +455,6 @@ static const yytype_uint8 yyrline[] =
 {
        0,    31,    31,    32,    33,    34,    35,    36,    37,    38,
       39,    40,    41,    42,    43,    44
->>>>>>> Stashed changes
 };
 #endif
 
@@ -540,11 +465,7 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "BYE", "CD", "STRING", "ALIAS", "END",
   "SETENV", "PRINTENV", "UNSETENV", "UNALIAS", "LS", "WC", "VARIABLE",
-<<<<<<< Updated upstream
-  "PIPE_BAR", "PIPE_GRTR", "PIPE_LESS", "$accept", "cmd_line", YY_NULLPTR
-=======
   "PIPE_BAR", "PIPE_GRTR", "PIPE_LESS", "$accept", "cmd_line", 0
->>>>>>> Stashed changes
 };
 #endif
 
@@ -558,46 +479,18 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-<<<<<<< Updated upstream
-#define YYPACT_NINF (-5)
-
-#define yypact_value_is_default(Yyn) \
-  ((Yyn) == YYPACT_NINF)
-
-#define YYTABLE_NINF (-1)
-
-#define yytable_value_is_error(Yyn) \
-  0
-
-  /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
-     STATE-NUM.  */
-static const yytype_int8 yypact[] =
-{
-      -3,     7,    -1,    -4,    10,     2,    11,     3,    14,    -5,
-      -5,    20,    -5,    15,    16,    18,    19,    21,    22,    -5,
-      23,    -5,    -5,    -5,    24,    25,    26,    27,    28,    -5,
-      -5,    -5,    -5,    -5,    -5
-=======
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
        0,    18,    19,    19,    19,    19,    19,    19,    19,    19,
       19,    19,    19,    19,    19,    19
->>>>>>> Stashed changes
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-<<<<<<< Updated upstream
-       0,     0,     0,     0,    12,     0,     0,     0,     0,    13,
-      14,     0,     2,     0,     0,     0,     0,     0,     0,     9,
-       0,    11,     1,     3,     0,     0,     0,     0,     0,    10,
-       6,     7,     8,     4,     5
-=======
-       0,     2,     2,     1,     2,     4,     4,     4,     4,     4,
+       0,     2,     2,     1,     3,     4,     3,     4,     4,     4,
        2,     3,     2,     1,     1,     1
->>>>>>> Stashed changes
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -605,14 +498,10 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-<<<<<<< Updated upstream
-      -5,    -5
-=======
        0,     0,     3,     0,    13,     0,     0,     0,     0,    14,
-      15,     0,     2,     4,     0,     0,     0,     0,     0,    10,
-       0,    12,     1,     0,     0,     0,     0,     0,    11,     7,
-       8,     9,     5,     6
->>>>>>> Stashed changes
+      15,     0,     2,     0,     0,     0,     0,     0,     0,    10,
+       0,    12,     1,     4,     0,     0,     0,     0,     6,    11,
+       7,     8,     9,     5
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -626,30 +515,16 @@ static const yytype_int8 yydefgoto[] =
 #define YYPACT_NINF -5
 static const yytype_int8 yypact[] =
 {
-<<<<<<< Updated upstream
-       1,     2,     3,     4,    13,     5,     6,     7,     8,     9,
-      10,    14,    15,    16,    12,    17,    18,    20,    19,    21,
-      22,    24,    23,    25,    26,     0,    27,    28,     0,     0,
-      29,    30,    31,    32,    33,    34
-=======
       -3,     7,    -1,    -4,    10,    11,    12,     3,    13,    -5,
-      -5,    20,    -5,    -5,    16,    17,    18,    19,    21,    -5,
-      22,    -5,    -5,    23,    24,    25,    26,    27,    -5,    -5,
+      -5,    20,    -5,    14,    17,    18,    19,    21,    22,    -5,
+      23,    -5,    -5,    -5,    24,    25,    26,    27,    -5,    -5,
       -5,    -5,    -5,    -5
->>>>>>> Stashed changes
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-<<<<<<< Updated upstream
-       3,     4,     5,     6,     5,     8,     9,    10,    11,    12,
-      13,    15,    16,    17,     7,     5,    14,    14,     7,     5,
-       0,     5,     7,     5,     5,    -1,     5,     5,    -1,    -1,
-       7,     7,     7,     7,     7,     7
-=======
       -5,    -5
->>>>>>> Stashed changes
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -659,45 +534,28 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-<<<<<<< Updated upstream
-       0,     3,     4,     5,     6,     8,     9,    10,    11,    12,
-      13,    19,     7,     5,    15,    16,    17,     5,    14,     7,
-      14,     5,     0,     7,     5,     5,     5,     5,     5,     7,
-       7,     7,     7,     7,     7
-=======
        1,     2,     3,     4,    13,     5,     6,     7,     8,     9,
       10,    14,    15,    16,    12,    17,    18,    20,    21,    19,
-      22,    23,    24,    25,    26,     0,    27,     0,     0,    28,
+      22,    23,    24,    25,    26,     0,    27,    28,     0,     0,
       29,    30,    31,    32,    33
->>>>>>> Stashed changes
 };
 
 static const yytype_int8 yycheck[] =
 {
-<<<<<<< Updated upstream
-       0,    18,    19,    19,    19,    19,    19,    19,    19,    19,
-      19,    19,    19,    19,    19
-=======
        3,     4,     5,     6,     5,     8,     9,    10,    11,    12,
       13,    15,    16,    17,     7,     5,     5,    14,     5,     7,
-       0,     5,     5,     5,     5,    -1,     5,    -1,    -1,     7,
+       0,     7,     5,     5,     5,    -1,     5,     5,    -1,    -1,
        7,     7,     7,     7,     7
->>>>>>> Stashed changes
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-<<<<<<< Updated upstream
-       0,     2,     2,     3,     4,     4,     4,     4,     4,     2,
-       3,     2,     1,     1,     1
-=======
        0,     3,     4,     5,     6,     8,     9,    10,    11,    12,
       13,    19,     7,     5,    15,    16,    17,     5,     5,     7,
-      14,     5,     0,     5,     5,     5,     5,     5,     7,     7,
+      14,     5,     0,     7,     5,     5,     5,     5,     5,     7,
        7,     7,     7,     7
->>>>>>> Stashed changes
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1511,88 +1369,6 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-<<<<<<< Updated upstream
-  case 2:
-#line 24 "nutshparser.y"
-                                                {exit(1); return 1; }
-#line 1343 "nutshparser.tab.c"
-    break;
-
-  case 3:
-#line 25 "nutshparser.y"
-                                                {runCD((yyvsp[-1].string)); return 1;}
-#line 1349 "nutshparser.tab.c"
-    break;
-
-  case 4:
-#line 26 "nutshparser.y"
-                                                {runSetAlias((yyvsp[-2].string), (yyvsp[-1].string)); return 1;}
-#line 1355 "nutshparser.tab.c"
-    break;
-
-  case 5:
-#line 27 "nutshparser.y"
-                                    {printf("setenv");}
-#line 1361 "nutshparser.tab.c"
-    break;
-
-  case 6:
-#line 28 "nutshparser.y"
-                                    {printf("bar_pipe");}
-#line 1367 "nutshparser.tab.c"
-    break;
-
-  case 7:
-#line 29 "nutshparser.y"
-                                    {printf("greater_pipe");}
-#line 1373 "nutshparser.tab.c"
-    break;
-
-  case 8:
-#line 30 "nutshparser.y"
-                                    {printf("less_pipe");}
-#line 1379 "nutshparser.tab.c"
-    break;
-
-  case 9:
-#line 31 "nutshparser.y"
-                                    {printf("setenv");}
-#line 1385 "nutshparser.tab.c"
-    break;
-
-  case 10:
-#line 32 "nutshparser.y"
-                                    {printf("setenv");}
-#line 1391 "nutshparser.tab.c"
-    break;
-
-  case 11:
-#line 33 "nutshparser.y"
-                                    {printf("setenv");}
-#line 1397 "nutshparser.tab.c"
-    break;
-
-  case 12:
-#line 34 "nutshparser.y"
-                                    {printf("setenv");}
-#line 1403 "nutshparser.tab.c"
-    break;
-
-  case 13:
-#line 35 "nutshparser.y"
-                                    {printf("setenv");}
-#line 1409 "nutshparser.tab.c"
-    break;
-
-  case 14:
-#line 36 "nutshparser.y"
-                                    {printf("setenv");}
-#line 1415 "nutshparser.tab.c"
-    break;
-
-
-#line 1419 "nutshparser.tab.c"
-=======
         case 2:
 #line 31 "nutshparser.y"
     {exit(1); return 1; ;}
@@ -1605,7 +1381,7 @@ yyreduce:
 
   case 4:
 #line 33 "nutshparser.y"
-    {runCD((yyvsp[(2) - (2)].string));;}
+    {runCD((yyvsp[(2) - (3)].string));;}
     break;
 
   case 5:
@@ -1615,7 +1391,7 @@ yyreduce:
 
   case 6:
 #line 35 "nutshparser.y"
-    {runSetenv((yyvsp[(2) - (4)].string), (yyvsp[(3) - (4)].string));;}
+    {runSetenv((yyvsp[(2) - (3)].string), (yyvsp[(3) - (3)].string));;}
     break;
 
   case 7:
@@ -1637,7 +1413,6 @@ yyreduce:
 #line 39 "nutshparser.y"
     {printenv();;}
     break;
->>>>>>> Stashed changes
 
   case 11:
 #line 40 "nutshparser.y"
@@ -1878,13 +1653,9 @@ yyreturn:
   /* Make sure YYID is used.  */
   return YYID (yyresult);
 }
-<<<<<<< Updated upstream
-#line 39 "nutshparser.y"
-=======
 
 
 #line 47 "nutshparser.y"
->>>>>>> Stashed changes
 
 
 int yyerror(char *s) {
@@ -1893,7 +1664,7 @@ int yyerror(char *s) {
   }
   
 int runCDHome(){
-	chdir("/Nutshell-Project/");
+	chdir("Nutshell-Project");
 	return 1;
 }
 
@@ -1945,10 +1716,10 @@ int runSetAlias(char *name, char *word) {
 
 	return 1;
 }
-<<<<<<< Updated upstream
-=======
 
 int runSetenv(char *variable, char *word) {
+
+	printf("hello");
 	for (int i = 0; i < varIndex; i++) {
 		if(strcmp(variable, word) == 0){
 			printf("Error: variable and word are the same value\n");
@@ -1975,7 +1746,6 @@ int printenv(){
 		printf("%s = %s\n", varTable.var[i], varTable.word[i]);
 	}
 	return 1;
-
 }	
 
 int printAlias(){
@@ -1998,4 +1768,3 @@ int printAlias(){
 	
 
 
->>>>>>> Stashed changes

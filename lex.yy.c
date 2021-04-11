@@ -364,14 +364,9 @@ static void yy_fatal_error (yyconst char msg[]  );
 		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" ); \
 	yy_flex_strncpy( yytext, (yytext_ptr), yyleng + 1 ); \
 	(yy_c_buf_p) = yy_cp;
-<<<<<<< Updated upstream
+
 #define YY_NUM_RULES 14
 #define YY_END_OF_BUFFER 15
-=======
-
-#define YY_NUM_RULES 16
-#define YY_END_OF_BUFFER 17
->>>>>>> Stashed changes
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -379,11 +374,7 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-<<<<<<< Updated upstream
-static const flex_int16_t yy_accept[37] =
-=======
-static yyconst flex_int16_t yy_accept[45] =
->>>>>>> Stashed changes
+static yyconst flex_int16_t yy_accept[37] =
     {   0,
         0,    0,    0,    0,   15,   14,   11,    3,   13,   12,
         9,    8,   13,   13,   13,   13,    7,    1,    2,   13,
@@ -430,11 +421,7 @@ static yyconst flex_int32_t yy_meta[24] =
         3,    3,    1
     } ;
 
-<<<<<<< Updated upstream
-static const flex_int16_t yy_base[40] =
-=======
-static yyconst flex_int16_t yy_base[48] =
->>>>>>> Stashed changes
+static yyconst flex_int16_t yy_base[40] =
     {   0,
         0,    0,   23,   46,   44,   75,   75,   75,    0,   75,
        75,   75,   28,   20,   29,   22,   75,    0,   75,    0,
@@ -442,11 +429,7 @@ static yyconst flex_int16_t yy_base[48] =
         0,   19,   13,    6,    0,   75,   69,   23,   71
     } ;
 
-<<<<<<< Updated upstream
-static const flex_int16_t yy_def[40] =
-=======
-static yyconst flex_int16_t yy_def[48] =
->>>>>>> Stashed changes
+static yyconst flex_int16_t yy_def[40] =
     {   0,
        36,    1,   37,   37,   36,   36,   36,   36,   38,   36,
        36,   36,   38,   38,   38,   38,   36,   39,   36,   38,
@@ -528,14 +511,8 @@ bool ifAlias(char* name){
     }
     return false;
 }
-<<<<<<< Updated upstream
-#line 503 "lex.yy.c"
 
-#line 505 "lex.yy.c"
-=======
-
-#line 519 "lex.yy.c"
->>>>>>> Stashed changes
+#line 516 "lex.yy.c"
 
 #define INITIAL 0
 #define string_condition 1
@@ -721,7 +698,7 @@ YY_DECL
 #line 45 "nutshscanner.l"
 
 
-#line 705 "lex.yy.c"
+#line 702 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -749,17 +726,7 @@ YY_DECL
 		yy_load_buffer_state( );
 		}
 
-<<<<<<< Updated upstream
-	{
-#line 45 "nutshscanner.l"
-
-
-#line 726 "lex.yy.c"
-
-	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
-=======
 	while ( 1 )		/* loops until end-of-file is reached */
->>>>>>> Stashed changes
 		{
 		yy_cp = (yy_c_buf_p);
 
@@ -784,13 +751,8 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-<<<<<<< Updated upstream
 				if ( yy_current_state >= 37 )
-					yy_c = yy_meta[yy_c];
-=======
-				if ( yy_current_state >= 45 )
 					yy_c = yy_meta[(unsigned int) yy_c];
->>>>>>> Stashed changes
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
@@ -902,11 +864,7 @@ YY_RULE_SETUP
 #line 73 "nutshscanner.l"
 ECHO;
 	YY_BREAK
-<<<<<<< Updated upstream
-#line 866 "lex.yy.c"
-=======
-#line 881 "lex.yy.c"
->>>>>>> Stashed changes
+#line 868 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(string_condition):
 	yyterminate();
@@ -1199,13 +1157,8 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-<<<<<<< Updated upstream
 			if ( yy_current_state >= 37 )
-				yy_c = yy_meta[yy_c];
-=======
-			if ( yy_current_state >= 45 )
 				yy_c = yy_meta[(unsigned int) yy_c];
->>>>>>> Stashed changes
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 		}
@@ -1232,19 +1185,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-<<<<<<< Updated upstream
 		if ( yy_current_state >= 37 )
-			yy_c = yy_meta[yy_c];
-		}
-	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 36);
-=======
-		if ( yy_current_state >= 45 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 44);
->>>>>>> Stashed changes
+	yy_is_jam = (yy_current_state == 36);
 
 	return yy_is_jam ? 0 : yy_current_state;
 }
