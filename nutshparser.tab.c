@@ -125,6 +125,7 @@ int runCDHome();
 int printAlias();
 int runSetenv(char *variable, char *word);
 int printenv();
+int unsetenvFunct(char* variable);
 
 
 
@@ -148,10 +149,10 @@ int printenv();
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 24 "nutshparser.y"
+#line 25 "nutshparser.y"
 {char *string;}
 /* Line 193 of yacc.c.  */
-#line 155 "nutshparser.tab.c"
+#line 156 "nutshparser.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -164,7 +165,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 168 "nutshparser.tab.c"
+#line 169 "nutshparser.tab.c"
 
 #ifdef short
 # undef short
@@ -453,8 +454,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    31,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    41,    42,    43,    44
+       0,    32,    32,    33,    34,    35,    36,    37,    38,    39,
+      40,    41,    42,    43,    44,    45
 };
 #endif
 
@@ -1370,78 +1371,78 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 31 "nutshparser.y"
+#line 32 "nutshparser.y"
     {exit(1); return 1; ;}
     break;
 
   case 3:
-#line 32 "nutshparser.y"
+#line 33 "nutshparser.y"
     {runCDHome();;}
     break;
 
   case 4:
-#line 33 "nutshparser.y"
+#line 34 "nutshparser.y"
     {runCD((yyvsp[(2) - (3)].string));;}
     break;
 
   case 5:
-#line 34 "nutshparser.y"
-    {runSetAlias((yyvsp[(2) - (4)].string), (yyvsp[(3) - (4)].string)); return 1;;}
+#line 35 "nutshparser.y"
+    {runSetAlias((yyvsp[(2) - (4)].string), (yyvsp[(3) - (4)].string));;}
     break;
 
   case 6:
-#line 35 "nutshparser.y"
+#line 36 "nutshparser.y"
     {runSetenv((yyvsp[(2) - (3)].string), (yyvsp[(3) - (3)].string));;}
     break;
 
   case 7:
-#line 36 "nutshparser.y"
+#line 37 "nutshparser.y"
     {printf("bar_pipe");;}
     break;
 
   case 8:
-#line 37 "nutshparser.y"
+#line 38 "nutshparser.y"
     {printf("greater_pipe");;}
     break;
 
   case 9:
-#line 38 "nutshparser.y"
+#line 39 "nutshparser.y"
     {printf("less_pipe");;}
     break;
 
   case 10:
-#line 39 "nutshparser.y"
+#line 40 "nutshparser.y"
     {printenv();;}
     break;
 
   case 11:
-#line 40 "nutshparser.y"
-    {printf("setenv");;}
+#line 41 "nutshparser.y"
+    {unsetenvFunct((yyvsp[(2) - (3)].string));;}
     break;
 
   case 12:
-#line 41 "nutshparser.y"
-    {printf("setenv");;}
-    break;
-
-  case 13:
 #line 42 "nutshparser.y"
     {printf("setenv");;}
     break;
 
-  case 14:
+  case 13:
 #line 43 "nutshparser.y"
+    {printAlias();;}
+    break;
+
+  case 14:
+#line 44 "nutshparser.y"
     {printf("setenv");;}
     break;
 
   case 15:
-#line 44 "nutshparser.y"
+#line 45 "nutshparser.y"
     {printf("setenv");;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1445 "nutshparser.tab.c"
+#line 1446 "nutshparser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1655,7 +1656,7 @@ yyreturn:
 }
 
 
-#line 47 "nutshparser.y"
+#line 48 "nutshparser.y"
 
 
 int yyerror(char *s) {
@@ -1718,8 +1719,6 @@ int runSetAlias(char *name, char *word) {
 }
 
 int runSetenv(char *variable, char *word) {
-
-	printf("hello");
 	for (int i = 0; i < varIndex; i++) {
 		if(strcmp(variable, word) == 0){
 			printf("Error: variable and word are the same value\n");
@@ -1754,6 +1753,50 @@ int printAlias(){
 	}
 	return 1;
 }
+
+int unsetenvFunct(char* variable){
+
+	bool indexFound = false;
+	int i = 0; 
+	
+	while(indexFound != true){
+		if(strcmp(varTable.var[i], variable) == 0) {
+			indexFound = true;
+		}
+		i++;
+	}
+	
+	for(i; i < varIndex-1; i++){
+		strcpy(varTable.var[i], varTable.var[i+1]);
+		strcpy(varTable.word[i], varTable.word[i+1]);
+	}
+	
+	varIndex = varIndex - 1; 
+	
+	return 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	
 	

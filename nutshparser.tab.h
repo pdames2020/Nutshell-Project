@@ -78,7 +78,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 24 "nutshparser.y"
+#line 25 "nutshparser.y"
 {char *string;}
 /* Line 1529 of yacc.c.  */
 #line 85 "nutshparser.tab.h"

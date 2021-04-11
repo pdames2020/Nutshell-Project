@@ -18,6 +18,7 @@ int runCDHome();
 int printAlias();
 int runSetenv(char *variable, char *word);
 int printenv();
+int unsetenvFunct(char* variable);
 
 %}
 
@@ -31,15 +32,15 @@ cmd_line    :
 	BYE END 		                {exit(1); return 1; }
 	| CD							{runCDHome();}
 	| CD STRING END         		{runCD($2);}
-	| ALIAS STRING STRING END		{runSetAlias($2, $3); return 1;}
-    | SETENV STRING STRING    {runSetenv($2, $3);}  
+	| ALIAS STRING STRING END		{runSetAlias($2, $3);}
+    | SETENV STRING STRING    		{runSetenv($2, $3);}  
     | STRING PIPE_BAR STRING END    {printf("bar_pipe");}
     | STRING PIPE_GRTR STRING END   {printf("greater_pipe");}
     | STRING PIPE_LESS STRING END   {printf("less_pipe");}
     | PRINTENV END                  {printenv();}
-    | UNSETENV VARIABLE END         {printf("setenv");}
+    | UNSETENV VARIABLE END         {unsetenvFunct($2);}
     | UNALIAS STRING                {printf("setenv");}
-    | ALIAS                         {printf("setenv");}
+    | ALIAS                         {printAlias();}
     | LS                            {printf("setenv");}
     | WC                            {printf("setenv");}
  
@@ -106,8 +107,6 @@ int runSetAlias(char *name, char *word) {
 }
 
 int runSetenv(char *variable, char *word) {
-
-	printf("hello");
 	for (int i = 0; i < varIndex; i++) {
 		if(strcmp(variable, word) == 0){
 			printf("Error: variable and word are the same value\n");
@@ -142,6 +141,50 @@ int printAlias(){
 	}
 	return 1;
 }
+
+int unsetenvFunct(char* variable){
+
+	bool indexFound = false;
+	int i = 0; 
+	
+	while(indexFound != true){
+		if(strcmp(varTable.var[i], variable) == 0) {
+			indexFound = true;
+		}
+		i++;
+	}
+	
+	for(i; i < varIndex-1; i++){
+		strcpy(varTable.var[i], varTable.var[i+1]);
+		strcpy(varTable.word[i], varTable.word[i+1]);
+	}
+	
+	varIndex = varIndex - 1; 
+	
+	return 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	
 	
