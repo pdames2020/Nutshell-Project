@@ -39,7 +39,7 @@ PATH "PATH"
 META [\<\>|"\&]
 QUOTE ["]
 NOTQUOTE [^"]
-WORD [A-Za-z0-9|(\"(META)\")|(\\(META))|(\"A-Za-z0-9(META) \")]* 
+WORD (\"[A-Za-z0-9 ) ]+\")|([A-Za-z0-9(\\META)]+ 
 VARIABLE [A-Za-z][A-Za-z0-9]*
 
 %%
@@ -50,10 +50,12 @@ VARIABLE [A-Za-z][A-Za-z0-9]*
 [ ]		            { }
 bye                 { return BYE; }
 cd		            { return CD;}
+ls                  { return LS;}
 alias		        { return ALIAS; }
 {PIPE_BAR}          { return PIPE_BAR; }
 {PIPE_GRTR}         { return PIPE_GRTR; }
 {PIPE_LESS}         { return PIPE_LESS; }
+{SETENV}            { return SETENV; }
 {PRINTENV}          { return PRINTENV;}
 "\n"		        { return END; }
 [\"]                 { BEGIN(string_condition); }
