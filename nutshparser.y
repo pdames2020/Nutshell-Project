@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <string.h>
 #include "global.h"
+#include<time.h>
+
 
 extern char **environ;
 
@@ -25,7 +27,7 @@ int unsetenvFunct(char* variable);
 %union {char *string;}
 
 %start cmd_line
-%token <string> BYE CD STRING ALIAS END SETENV PRINTENV UNSETENV UNALIAS LS WC VARIABLE PIPE_BAR PIPE_GRTR PIPE_LESS 
+%token <string> BYE CD STRING ALIAS END SETENV PRINTENV UNSETENV UNALIAS LS WC VARIABLE PIPE_BAR PIPE_GRTR PIPE_LESS PWD ECHO SSH PING DATE
 
 %%
 cmd_line    :
@@ -43,7 +45,11 @@ cmd_line    :
     | ALIAS                         {printAlias();}
     | LS                            {printf("setenv");}
     | WC                            {printf("setenv");}
- 
+    | PWD							{getcwd(cwd, sizeof(cwd)); printf("Current working dir: %s\n", cwd);}
+    | ECHO STRING					{printf($2);}
+    | SSH STRING					{}
+    | PING							{}
+    | DATE							{time_t t; time(&t); printf("Date and Time: %s", ctime(&t));}
 
 %%
 

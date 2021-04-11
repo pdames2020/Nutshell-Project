@@ -53,7 +53,12 @@
      VARIABLE = 269,
      PIPE_BAR = 270,
      PIPE_GRTR = 271,
-     PIPE_LESS = 272
+     PIPE_LESS = 272,
+     PWD = 273,
+     ECHO = 274,
+     SSH = 275,
+     PING = 276,
+     DATE = 277
    };
 #endif
 /* Tokens.  */
@@ -72,16 +77,21 @@
 #define PIPE_BAR 270
 #define PIPE_GRTR 271
 #define PIPE_LESS 272
+#define PWD 273
+#define ECHO 274
+#define SSH 275
+#define PING 276
+#define DATE 277
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 25 "nutshparser.y"
+#line 27 "nutshparser.y"
 {char *string;}
 /* Line 1529 of yacc.c.  */
-#line 85 "nutshparser.tab.h"
+#line 95 "nutshparser.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

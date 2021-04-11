@@ -50,7 +50,12 @@ VARIABLE [A-Za-z][A-Za-z0-9]*
 [ ]		            { }
 bye                 { return BYE; }
 cd		            { return CD;}
-alias		        { return ALIAS; }
+pwd					{return PWD;}
+echo 				{return ECHO;}
+ssh 				{return SSH;}
+alias		        { return ALIAS;}
+ping				{return PING;}
+date				{return DATE;}
 {PIPE_BAR}          { return PIPE_BAR; }
 {PIPE_GRTR}         { return PIPE_GRTR; }
 {PIPE_LESS}         { return PIPE_LESS; }
