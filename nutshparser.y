@@ -26,12 +26,13 @@ extern char **environ;
 cmd_line    :
 	BYE END 		                {exit(1); return 1; }
 	| CD STRING END        			{runCD($2); return 1;}
-	| ALIAS STRING STRING END		{runSetAlias($2, $3); return 1;}
-	| ALIAS                         {printAlias(); return 1;}
-    | SETENV VARIABLE WORD END      {setenv($2, $3, 1); return 1;} 
+	| ALIAS STRING STRING END		{clearExpression(); runSetAlias($2, $3); return 1;}
+	| ALIAS END                         {printAlias(); return 1;}
+    | SETENV STRING STRING END      {runSetenv($2, $3); return 1;} 
+	| PRINTENV END                      { printenv(); return 1;}
 	| UNSETENV VARIABLE END         {unsetenv($2); return 1;}
-    
-
+	| UNALIAS STRING END               {runUnalias($2); return 1;}
+    | STRING STRING END                 {clearExpression(); return 1;}
 
 
 %%
@@ -40,6 +41,12 @@ int yyerror(char *s) {
   printf("%s\n",s);
   return 0;
   }
+
+void clearExpression(){
+    free(expression);
+	expr_index = 0;
+}  
+
 
 int runCD(char* arg) {
 	if (arg[0] != '/') { // arg is relative path
@@ -69,6 +76,10 @@ int runCD(char* arg) {
 }
 
 int runSetAlias(char *name, char *word) {
+	// Tokenize name: alias a b
+	//Tokenized = ['alias', 'a', 'b']
+	// Check if (name == Tokenized
+
 	for (int i = 0; i < aliasIndex; i++) {
 		if(strcmp(name, word) == 0){
 			printf("Error, expansion of \"%s\" would create a loop.\n", name);
@@ -97,37 +108,28 @@ int printAlias(){
 	return 1;
 }
 
-int runSetenv(char *variable, char *word, char *overwrite){
-	// The setenv() function adds the variable name to the environment
-    //    with the value value, if name does not already exist.  If name
-    //    does exist in the envinronment, then its value is changed to value
-    //    if overwrite is nonzero; if overwrite is zero, then the value of
-    //    name is not changed (and setenv() returns a success status).
-    //    This function makes copies of the strings pointed to by name and
-    //    value (by contrast with putenv(3)).
-	char *es;
+int runSetenv(char *variable, char *word) {
 
-    if (variable == NULL || variable[0] == '\0' || strchr(variable, '=') != NULL ||
-            word == NULL) {
-        errno = EINVAL;
-        return -1;
-    }
+	printf("hello");
+	for (int i = 0; i < varIndex; i++) {
+		if(strcmp(variable, word) == 0){
+			printf("Error: variable and word are the same value\n");
+			return 1;
+		}
+		else if((strcmp(varTable.var[i], variable) == 0) && (strcmp(varTable.word[i], word) == 0)){
+			printf("Error: same values\n");
+			return 1;
+		}
+		else if(strcmp(varTable.var[i], variable) == 0) {
+			strcpy(varTable.word[i], word);
+			return 1;
+		}
+	}
+	strcpy(varTable.var[varIndex], variable);
+	strcpy(varTable.word[varIndex], word);
+	varIndex++;
 
-    if (getenv(variable) != NULL && overwrite == 0)
-        return 0;
-
-    unsetenv(variable);             /* Remove all occurrences */
-
-    es = malloc(strlen(variable) + strlen(word) + 2);
-                                /* +2 for '=' and null terminator */
-    if (es == NULL)
-        return -1;
-
-    strcpy(es, variable);
-    strcat(es, word);
-
-    return (putenv(es) != 0) ? -1 : 0;
-
+	return 1;
 	// | STRING PIPE_BAR STRING END    {runPipeBar($1, $3);}
     // | STRING PIPE_GRTR STRING END   {runPipeGrtr($1, $3);}
     // | STRING PIPE_LESS STRING END   {runPipeLess($1, $3);}
@@ -136,4 +138,32 @@ int runSetenv(char *variable, char *word, char *overwrite){
     // | LS                            {printf("ls");}
     // | WC                            {printf("setenv");}
 
+}
+
+int printenv(){
+	for(int i = 0; i < varIndex; i++){
+		printf("%s = %s\n", varTable.var[i], varTable.word[i]);
+	}
+	return 1;
+}	
+
+int runUnalias(char *name){
+	int removeIndex = -1;
+	for(int i = 0; i < aliasIndex; i++){
+		printf("%s\n", name);
+		//printf("%s\n", aliasTable.name[i]);
+		if(aliasTable.word[i] == name){
+			printf("%s", "here");
+			removeIndex = i;
+		}
+		if((removeIndex > -1) && (i != aliasIndex - 1)){
+			strcpy(aliasTable.name[i], aliasTable.name[i+1]);
+			strcpy(aliasTable.word[i], aliasTable.word[i+1]);
+			printf("%d", i);
+			printf("%s", aliasTable.name[i]);
+			printf("%s", aliasTable.word[i]);
+		}
+	}
+	aliasIndex--;
+	return 1;
 }
