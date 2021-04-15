@@ -48,6 +48,7 @@
      PRINTENV = 264,
      UNSETENV = 265,
      UNALIAS = 266,
+<<<<<<< Updated upstream
      LS = 267,
      WC = 268,
      VARIABLE = 269,
@@ -59,6 +60,14 @@
      SSH = 275,
      PING = 276,
      DATE = 277
+=======
+     VARIABLE = 267,
+     PIPE_BAR = 268,
+     PIPE_GRTR = 269,
+     PIPE_LESS = 270,
+     WORD = 271,
+     ANYCHAR = 272
+>>>>>>> Stashed changes
    };
 #endif
 /* Tokens.  */
@@ -71,6 +80,7 @@
 #define PRINTENV 264
 #define UNSETENV 265
 #define UNALIAS 266
+<<<<<<< Updated upstream
 #define LS 267
 #define WC 268
 #define VARIABLE 269
@@ -82,16 +92,31 @@
 #define SSH 275
 #define PING 276
 #define DATE 277
+=======
+#define VARIABLE 267
+#define PIPE_BAR 268
+#define PIPE_GRTR 269
+#define PIPE_LESS 270
+#define WORD 271
+#define ANYCHAR 272
+>>>>>>> Stashed changes
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
+<<<<<<< Updated upstream
 #line 27 "nutshparser.y"
 {char *string;}
 /* Line 1529 of yacc.c.  */
 #line 95 "nutshparser.tab.h"
+=======
+#line 28 "nutshparser.y"
+{char *string;}
+/* Line 1529 of yacc.c.  */
+#line 85 "nutshparser.tab.h"
+>>>>>>> Stashed changes
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

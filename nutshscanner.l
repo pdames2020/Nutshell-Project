@@ -6,6 +6,7 @@
 #include <string.h>
 #include "global.h"
 
+
 char* subAliases(char* name){
     for (int i = 0; i < aliasIndex; i++) {
         if(strcmp(aliasTable.name[i], name) == 0) {
@@ -21,6 +22,27 @@ bool ifAlias(char* name){
         }
     }
     return false;
+}
+
+
+// void printExpression(){
+//     printf("%s\n", "Adding alias");
+//     for(int i = 0; i < 10; i++){
+//         printf("Elem %d %s\n",i , (expression[i]));
+//     }
+// }
+
+
+bool isStart(char* name){
+    printf("Name: %s\n", name);
+    printf("First token: %s\n", expression[0]);
+
+    if(expression[0] == name){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 %}
 %array
@@ -39,17 +61,22 @@ PATH "PATH"
 META [\<\>|"\&]
 QUOTE ["]
 NOTQUOTE [^"]
+<<<<<<< Updated upstream
 WORD [A-Za-z0-9|(\"(META)\")|(\\(META))|(\"A-Za-z0-9(META) \")]* 
+=======
+WORD [^<>|"\\&\n \t]+
+>>>>>>> Stashed changes
 VARIABLE [A-Za-z][A-Za-z0-9]*
 
 %%
 
-<string_condition>{ANYCHAR}+     { yylval.string = strdup(yytext); return STRING;}
+<string_condition>{ANYCHAR}+     {yylval.string = strdup(yytext);return STRING;}
 <string_condition>[\"]          {BEGIN(INITIAL);}
 
 [ ]		            { }
 bye                 { return BYE; }
 cd		            { return CD;}
+<<<<<<< Updated upstream
 pwd					{return PWD;}
 echo 				{return ECHO;}
 ssh 				{return SSH;}
@@ -60,6 +87,15 @@ date				{return DATE;}
 {PIPE_GRTR}         { return PIPE_GRTR; }
 {PIPE_LESS}         { return PIPE_LESS; }
 {PRINTENV}          { return PRINTENV;}
+=======
+alias		        {return ALIAS; }
+unalias             { return UNALIAS; }
+{PIPE_BAR}          { return PIPE_BAR; }
+{PIPE_GRTR}         { return PIPE_GRTR; }
+{PIPE_LESS}         { return PIPE_LESS; }
+{SETENV}            { return SETENV; }
+{PRINTENV}          { return PRINTENV; }
+>>>>>>> Stashed changes
 "\n"		        { return END; }
 [\"]                 { BEGIN(string_condition); }
 {CHAR}+              {if(ifAlias(yytext)) {
@@ -75,4 +111,6 @@ date				{return DATE;}
                         return STRING;
                     };
                      }
+{WORD}              { return WORD; }
+
 %%

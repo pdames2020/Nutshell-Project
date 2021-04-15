@@ -7,63 +7,137 @@
 #include <unistd.h>
 #include <string.h>
 #include "global.h"
-#include<time.h>
-
-
-extern char **environ;
+#include <errno.h>
 
 int yylex(void);
 int yyerror(char *s);
 int runCD(char* arg);
 int runSetAlias(char *name, char *word);
-int runCDHome();
+void clearExpression();
 int printAlias();
-int runSetenv(char *variable, char *word);
+int runSetenv(char *variable, char *word) ;
 int printenv();
-int unsetenvFunct(char* variable);
+int runUnalias(char *name);
+int runNotBuilt();
+void addToLine(char* token);
 
+
+extern char **environ;
 %}
 
 %union {char *string;}
 
 %start cmd_line
-%token <string> BYE CD STRING ALIAS END SETENV PRINTENV UNSETENV UNALIAS LS WC VARIABLE PIPE_BAR PIPE_GRTR PIPE_LESS PWD ECHO SSH PING DATE
+%token <string> BYE CD STRING ALIAS END SETENV PRINTENV UNSETENV UNALIAS VARIABLE PIPE_BAR PIPE_GRTR PIPE_LESS WORD 
 
 %%
+
 cmd_line    :
-	BYE END 		                {exit(1); return 1; }
-	| CD							{runCDHome();}
-	| CD STRING END         		{runCD($2);}
-	| ALIAS STRING STRING END		{runSetAlias($2, $3);}
-    | SETENV STRING STRING    		{runSetenv($2, $3);}  
-    | STRING PIPE_BAR STRING END    {printf("bar_pipe");}
-    | STRING PIPE_GRTR STRING END   {printf("greater_pipe");}
-    | STRING PIPE_LESS STRING END   {printf("less_pipe");}
-    | PRINTENV END                  {printenv();}
-    | UNSETENV VARIABLE END         {unsetenvFunct($2);}
-    | UNALIAS STRING                {printf("setenv");}
-    | ALIAS                         {printAlias();}
-    | LS                            {printf("setenv");}
-    | WC                            {printf("setenv");}
-    | PWD							{getcwd(cwd, sizeof(cwd)); printf("Current working dir: %s\n", cwd);}
-    | ECHO STRING					{printf($2);}
-    | SSH STRING					{}
-    | PING							{}
-    | DATE							{time_t t; time(&t); printf("Date and Time: %s", ctime(&t));}
+	stmts
+	| BYE END 		                {exit(1); return 1; }
+	| CD STRING END        			{runCD($2); return 1;}
+	| ALIAS STRING STRING END		{clearExpression(); runSetAlias($2, $3); return 1;}
+	| ALIAS END                     {printAlias(); return 1;}
+    | SETENV STRING STRING END      {runSetenv($2, $3); return 1;} 
+	| PRINTENV END                  {printenv(); return 1;}
+	| UNSETENV VARIABLE END         {unsetenv($2); return 1;}
+	| UNALIAS STRING END            {runUnalias($2); return 1;}
+;
 
+stmts:
+	| stmt stmts
+
+stmt:
+	STRING{
+		addToLine($1)
+	}
+	| END{
+		runNotBuilt(); clearExpression(); return 1;
+	}
+;
+      
 %%
+
+/*void addToLine(char* token){
+	printf("hello");
+    expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
+    printf("hello");
+    strcpy(expression[expr_index], token);
+    
+    for(int i = 0; i < 10; i++){
+        printf("Elem %d %s\n",i , expression[i]);
+    }
+    printf("expression: %s\n", expression[expr_index]);
+    
+    expr_index++;
+}*/
+
+void addToLine(char* token){
+	//printf("hello");
+    expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
+    strcpy(expression[expr_index], token);
+    for(int i = 0; i < 10; i++){
+        printf("Elem %d %s\n",i , expression[i]);
+    }
+    printf("expression: %s\n", expression[expr_index]);
+    expr_index++;
+}
+
+int runNotBuilt(){
+	//printf("%s\n",expression[0]);
+	char* arguments[expr_index];
+	
+	char* binPath = NULL;
+	int argLength = strlen(expression[0]);
+	binPath = malloc(5 + argLength);
+	strcat(binPath, "/bin/");
+	strcat(binPath, expression[0]);
+	
+	arguments[0] = binPath;
+	//int j = 0;
+	
+	for(int i = 1; i < expr_index; i++){
+		arguments[i] = expression[i];
+		//j++;
+	}
+	
+	for(int i = 0; i < expr_index; i++){
+		printf("Argument: %d %s\n", i, arguments[i]);
+	}
+	
+	arguments[expr_index] = NULL;
+	
+	int pid = fork();
+	if (pid == -1){
+		printf("Error in forking\n");
+	}else if(pid ==0){
+		execv(binPath, arguments);
+	}else{
+		wait(NULL);
+	}
+
+	return 1;
+}
 
 int yyerror(char *s) {
   printf("%s\n",s);
   return 0;
   }
-  
-int runCDHome(){
-	chdir("Nutshell-Project");
-	return 1;
-}
+
+void clearExpression(){
+	//printf("clear expressionnnnnnn\n");
+	/*for(int i = 0; i < 10; i++){
+        printf("Elem from clear expression %d %s\n",i , expression[i]);
+    }*/
+    for(int i = 0; i < sizeof(expression)/sizeof(char); i++){
+        expression[i] = NULL;
+    }
+	expr_index = 0;
+}  
+
 
 int runCD(char* arg) {
+	//expr_index = 0;
 	if (arg[0] != '/') { // arg is relative path
 		strcat(varTable.word[0], "/");
 		strcat(varTable.word[0], arg);
@@ -88,9 +162,14 @@ int runCD(char* arg) {
                        	return 1;
 		}
 	}
+	//clearExpression();
 }
 
 int runSetAlias(char *name, char *word) {
+	// Tokenize name: alias a b
+	//Tokenized = ['alias', 'a', 'b']
+	// Check if (name == Tokenized
+
 	for (int i = 0; i < aliasIndex; i++) {
 		if(strcmp(name, word) == 0){
 			printf("Error, expansion of \"%s\" would create a loop.\n", name);
@@ -112,7 +191,16 @@ int runSetAlias(char *name, char *word) {
 	return 1;
 }
 
+int printAlias(){
+	for(int i = 0; i < aliasIndex; i++){
+		printf("%s%s%s\n", aliasTable.name[i], "=", aliasTable.word[i]);
+	}
+	return 1;
+}
+
 int runSetenv(char *variable, char *word) {
+
+	printf("hello");
 	for (int i = 0; i < varIndex; i++) {
 		if(strcmp(variable, word) == 0){
 			printf("Error: variable and word are the same value\n");
@@ -132,6 +220,7 @@ int runSetenv(char *variable, char *word) {
 	varIndex++;
 
 	return 1;
+
 }
 
 int printenv(){
@@ -141,66 +230,23 @@ int printenv(){
 	return 1;
 }	
 
-int printAlias(){
+int runUnalias(char *name){
+	int removeIndex = -1;
 	for(int i = 0; i < aliasIndex; i++){
-		printf("%s%s%s\n", aliasTable.name[i], "=", aliasTable.word[i]);
-	}
-	return 1;
-}
-
-int unsetenvFunct(char* variable){
-
-	bool indexFound = false;
-	int i = 0; 
-	
-	while(indexFound != true){
-		if(strcmp(varTable.var[i], variable) == 0) {
-			indexFound = true;
+		printf("%s\n", name);
+		//printf("%s\n", aliasTable.name[i]);
+		if(aliasTable.word[i] == name){
+			printf("%s", "here");
+			removeIndex = i;
 		}
-		i++;
+		if((removeIndex > -1) && (i != aliasIndex - 1)){
+			strcpy(aliasTable.name[i], aliasTable.name[i+1]);
+			strcpy(aliasTable.word[i], aliasTable.word[i+1]);
+			printf("%d", i);
+			printf("%s", aliasTable.name[i]);
+			printf("%s", aliasTable.word[i]);
+		}
 	}
-	
-	for(i; i < varIndex-1; i++){
-		strcpy(varTable.var[i], varTable.var[i+1]);
-		strcpy(varTable.word[i], varTable.word[i+1]);
-	}
-	
-	varIndex = varIndex - 1; 
-	
+	aliasIndex--;
 	return 1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-

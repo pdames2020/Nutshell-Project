@@ -75,6 +75,7 @@
      PRINTENV = 264,
      UNSETENV = 265,
      UNALIAS = 266,
+<<<<<<< Updated upstream
      LS = 267,
      WC = 268,
      VARIABLE = 269,
@@ -86,6 +87,14 @@
      SSH = 275,
      PING = 276,
      DATE = 277
+=======
+     VARIABLE = 267,
+     PIPE_BAR = 268,
+     PIPE_GRTR = 269,
+     PIPE_LESS = 270,
+     WORD = 271,
+     ANYCHAR = 272
+>>>>>>> Stashed changes
    };
 #endif
 /* Tokens.  */
@@ -98,6 +107,7 @@
 #define PRINTENV 264
 #define UNSETENV 265
 #define UNALIAS 266
+<<<<<<< Updated upstream
 #define LS 267
 #define WC 268
 #define VARIABLE 269
@@ -109,6 +119,14 @@
 #define SSH 275
 #define PING 276
 #define DATE 277
+=======
+#define VARIABLE 267
+#define PIPE_BAR 268
+#define PIPE_GRTR 269
+#define PIPE_LESS 270
+#define WORD 271
+#define ANYCHAR 272
+>>>>>>> Stashed changes
 
 
 
@@ -133,11 +151,22 @@ int yylex(void);
 int yyerror(char *s);
 int runCD(char* arg);
 int runSetAlias(char *name, char *word);
+<<<<<<< Updated upstream
 int runCDHome();
 int printAlias();
 int runSetenv(char *variable, char *word);
 int printenv();
 int unsetenvFunct(char* variable);
+=======
+void clearExpression();
+int printAlias();
+int runSetenv(char *variable, char *word) ;
+int printenv();
+int runUnalias(char *name);
+int runNotBuilt();
+void addToLine(char* token);
+
+>>>>>>> Stashed changes
 
 
 
@@ -161,10 +190,17 @@ int unsetenvFunct(char* variable);
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
+<<<<<<< Updated upstream
 #line 27 "nutshparser.y"
 {char *string;}
 /* Line 193 of yacc.c.  */
 #line 168 "nutshparser.tab.c"
+=======
+#line 28 "nutshparser.y"
+{char *string;}
+/* Line 193 of yacc.c.  */
+#line 159 "nutshparser.tab.c"
+>>>>>>> Stashed changes
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -177,7 +213,11 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
+<<<<<<< Updated upstream
 #line 181 "nutshparser.tab.c"
+=======
+#line 172 "nutshparser.tab.c"
+>>>>>>> Stashed changes
 
 #ifdef short
 # undef short
@@ -390,15 +430,25 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
+<<<<<<< Updated upstream
 #define YYFINAL  29
 /* YYLAST -- Last index in YYTABLE.  */
 #define YYLAST   41
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  23
+=======
+#define YYFINAL  21
+/* YYLAST -- Last index in YYTABLE.  */
+#define YYLAST   34
+
+/* YYNTOKENS -- Number of terminals.  */
+#define YYNTOKENS  18
+>>>>>>> Stashed changes
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  2
+#define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
+<<<<<<< Updated upstream
 #define YYNRULES  20
 /* YYNRULES -- Number of states.  */
 #define YYNSTATES  41
@@ -410,6 +460,19 @@ union yyalloc
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
+=======
+#define YYNRULES  14
+/* YYNRULES -- Number of states.  */
+#define YYNSTATES  30
+
+/* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
+#define YYUNDEFTOK  2
+#define YYMAXUTOK   272
+
+#define YYTRANSLATE(YYX)						\
+  ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
+
+>>>>>>> Stashed changes
 /* YYTRANSLATE[YYLEX] -- Bison symbol number corresponding to YYLEX.  */
 static const yytype_uint8 yytranslate[] =
 {
@@ -440,7 +503,11 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+<<<<<<< Updated upstream
       15,    16,    17,    18,    19,    20,    21,    22
+=======
+      15,    16,    17
+>>>>>>> Stashed changes
 };
 
 #if YYDEBUG
@@ -448,14 +515,20 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
+<<<<<<< Updated upstream
        0,     0,     3,     6,     8,    12,    17,    21,    26,    31,
       36,    39,    43,    46,    48,    50,    52,    54,    57,    60,
       62
+=======
+       0,     0,     3,     5,     8,    12,    17,    20,    25,    28,
+      32,    36,    37,    40,    42
+>>>>>>> Stashed changes
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
+<<<<<<< Updated upstream
       24,     0,    -1,     3,     7,    -1,     4,    -1,     4,     5,
        7,    -1,     6,     5,     5,     7,    -1,     8,     5,     5,
       -1,     5,    15,     5,     7,    -1,     5,    16,     5,     7,
@@ -463,14 +536,26 @@ static const yytype_int8 yyrhs[] =
       14,     7,    -1,    11,     5,    -1,     6,    -1,    12,    -1,
       13,    -1,    18,    -1,    19,     5,    -1,    20,     5,    -1,
       21,    -1,    22,    -1
+=======
+      19,     0,    -1,    20,    -1,     3,     7,    -1,     4,     5,
+       7,    -1,     6,     5,     5,     7,    -1,     6,     7,    -1,
+       8,     5,     5,     7,    -1,     9,     7,    -1,    10,    12,
+       7,    -1,    11,     5,     7,    -1,    -1,    21,    20,    -1,
+       5,    -1,     7,    -1
+>>>>>>> Stashed changes
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
+<<<<<<< Updated upstream
        0,    34,    34,    35,    36,    37,    38,    39,    40,    41,
       42,    43,    44,    45,    46,    47,    48,    49,    50,    51,
       52
+=======
+       0,    36,    36,    37,    38,    39,    40,    41,    42,    43,
+      44,    47,    48,    51,    54
+>>>>>>> Stashed changes
 };
 #endif
 
@@ -480,9 +565,15 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "BYE", "CD", "STRING", "ALIAS", "END",
+<<<<<<< Updated upstream
   "SETENV", "PRINTENV", "UNSETENV", "UNALIAS", "LS", "WC", "VARIABLE",
   "PIPE_BAR", "PIPE_GRTR", "PIPE_LESS", "PWD", "ECHO", "SSH", "PING",
   "DATE", "$accept", "cmd_line", 0
+=======
+  "SETENV", "PRINTENV", "UNSETENV", "UNALIAS", "VARIABLE", "PIPE_BAR",
+  "PIPE_GRTR", "PIPE_LESS", "WORD", "ANYCHAR", "$accept", "cmd_line",
+  "stmts", "stmt", 0
+>>>>>>> Stashed changes
 };
 #endif
 
@@ -492,25 +583,39 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
+<<<<<<< Updated upstream
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277
+=======
+     265,   266,   267,   268,   269,   270,   271,   272
+>>>>>>> Stashed changes
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
+<<<<<<< Updated upstream
        0,    23,    24,    24,    24,    24,    24,    24,    24,    24,
       24,    24,    24,    24,    24,    24,    24,    24,    24,    24,
       24
+=======
+       0,    18,    19,    19,    19,    19,    19,    19,    19,    19,
+      19,    20,    20,    21,    21
+>>>>>>> Stashed changes
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
+<<<<<<< Updated upstream
        0,     2,     2,     1,     3,     4,     3,     4,     4,     4,
        2,     3,     2,     1,     1,     1,     1,     2,     2,     1,
        1
+=======
+       0,     2,     1,     2,     3,     4,     2,     4,     2,     3,
+       3,     0,     2,     1,     1
+>>>>>>> Stashed changes
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -518,21 +623,32 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
+<<<<<<< Updated upstream
        0,     0,     3,     0,    13,     0,     0,     0,     0,    14,
       15,    16,     0,     0,    19,    20,     0,     2,     0,     0,
        0,     0,     0,     0,    10,     0,    12,    17,    18,     1,
        4,     0,     0,     0,     0,     6,    11,     7,     8,     9,
        5
+=======
+      11,     0,     0,    13,     0,    14,     0,     0,     0,     0,
+       0,     2,    11,     3,     0,     0,     6,     0,     8,     0,
+       0,     1,    12,     4,     0,     0,     9,    10,     5,     7
+>>>>>>> Stashed changes
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
+<<<<<<< Updated upstream
       -1,    16
+=======
+      -1,    10,    11,    12
+>>>>>>> Stashed changes
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
+<<<<<<< Updated upstream
 #define YYPACT_NINF -5
 static const yytype_int8 yypact[] =
 {
@@ -541,12 +657,24 @@ static const yytype_int8 yypact[] =
       25,    26,    28,    29,    -5,    30,    -5,    -5,    -5,    -5,
       -5,    31,    32,    33,    34,    -5,    -5,    -5,    -5,    -5,
       -5
+=======
+#define YYPACT_NINF -4
+static const yytype_int8 yypact[] =
+{
+      -3,     6,     9,    -4,     4,    -4,    10,    11,     7,    12,
+      16,    -4,     5,    -4,    13,    17,    -4,    18,    -4,    14,
+      19,    -4,    -4,    -4,    20,    21,    -4,    -4,    -4,    -4
+>>>>>>> Stashed changes
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
+<<<<<<< Updated upstream
       -5,    -5
+=======
+      -4,    -4,    22,    -4
+>>>>>>> Stashed changes
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -556,31 +684,51 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
+<<<<<<< Updated upstream
        1,     2,     3,     4,    18,     5,     6,     7,     8,     9,
       10,    19,    20,    21,    17,    11,    12,    13,    14,    15,
       22,    23,    25,    26,    24,    27,    28,    29,    31,    30,
       32,    33,     0,    34,    35,     0,     0,    36,    37,    38,
       39,    40
+=======
+       1,     2,     3,     4,     5,     6,     7,     8,     9,    15,
+       3,    16,     5,    13,    14,    17,    21,    20,    18,    19,
+      23,    26,    24,    25,     0,     0,    27,    28,    29,     0,
+       0,     0,     0,     0,    22
+>>>>>>> Stashed changes
 };
 
 static const yytype_int8 yycheck[] =
 {
+<<<<<<< Updated upstream
        3,     4,     5,     6,     5,     8,     9,    10,    11,    12,
       13,    15,    16,    17,     7,    18,    19,    20,    21,    22,
        5,     5,    14,     5,     7,     5,     5,     0,     5,     7,
        5,     5,    -1,     5,     5,    -1,    -1,     7,     7,     7,
        7,     7
+=======
+       3,     4,     5,     6,     7,     8,     9,    10,    11,     5,
+       5,     7,     7,     7,     5,     5,     0,     5,     7,    12,
+       7,     7,     5,     5,    -1,    -1,     7,     7,     7,    -1,
+      -1,    -1,    -1,    -1,    12
+>>>>>>> Stashed changes
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
+<<<<<<< Updated upstream
        0,     3,     4,     5,     6,     8,     9,    10,    11,    12,
       13,    18,    19,    20,    21,    22,    24,     7,     5,    15,
       16,    17,     5,     5,     7,    14,     5,     5,     5,     0,
        7,     5,     5,     5,     5,     5,     7,     7,     7,     7,
        7
+=======
+       0,     3,     4,     5,     6,     7,     8,     9,    10,    11,
+      19,    20,    21,     7,     5,     5,     7,     5,     7,    12,
+       5,     0,    20,     7,     5,     5,     7,     7,     7,     7
+>>>>>>> Stashed changes
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -647,6 +795,7 @@ while (YYID (0))
 	}								\
     while (YYID (0))
 #endif
+<<<<<<< Updated upstream
 
 
 /* YY_LOCATION_PRINT -- Print the location on the stream.
@@ -665,6 +814,26 @@ while (YYID (0))
 #endif
 
 
+=======
+
+
+/* YY_LOCATION_PRINT -- Print the location on the stream.
+   This macro was not mandated originally: define only if we know
+   we won't break user code: when these are the locations we know.  */
+
+#ifndef YY_LOCATION_PRINT
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+#  define YY_LOCATION_PRINT(File, Loc)			\
+     fprintf (File, "%d.%d-%d.%d",			\
+	      (Loc).first_line, (Loc).first_column,	\
+	      (Loc).last_line,  (Loc).last_column)
+# else
+#  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+# endif
+#endif
+
+
+>>>>>>> Stashed changes
 /* YYLEX -- calling `yylex' with the right arguments.  */
 
 #ifdef YYLEX_PARAM
@@ -706,10 +875,17 @@ do {									  \
 /*ARGSUSED*/
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
+<<<<<<< Updated upstream
 static void
 yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
 #else
 static void
+=======
+static void
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+#else
+static void
+>>>>>>> Stashed changes
 yy_symbol_value_print (yyoutput, yytype, yyvaluep)
     FILE *yyoutput;
     int yytype;
@@ -1209,10 +1385,17 @@ yyparse ()
      Waste one element of value and location stack
      so that they stay on the same level as the state stack.
      The wasted elements are never initialized.  */
+<<<<<<< Updated upstream
 
   yyssp = yyss;
   yyvsp = yyvs;
 
+=======
+
+  yyssp = yyss;
+  yyvsp = yyvs;
+
+>>>>>>> Stashed changes
   goto yysetstate;
 
 /*------------------------------------------------------------.
@@ -1394,6 +1577,7 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
+<<<<<<< Updated upstream
         case 2:
 #line 34 "nutshparser.y"
     {exit(1); return 1; ;}
@@ -1487,11 +1671,69 @@ yyreduce:
   case 20:
 #line 52 "nutshparser.y"
     {time_t t; time(&t); printf("Date and Time: %s", ctime(&t));;}
+=======
+        case 3:
+#line 37 "nutshparser.y"
+    {exit(1); return 1; ;}
+    break;
+
+  case 4:
+#line 38 "nutshparser.y"
+    {runCD((yyvsp[(2) - (3)].string)); return 1;;}
+    break;
+
+  case 5:
+#line 39 "nutshparser.y"
+    {clearExpression(); runSetAlias((yyvsp[(2) - (4)].string), (yyvsp[(3) - (4)].string)); return 1;;}
+    break;
+
+  case 6:
+#line 40 "nutshparser.y"
+    {printAlias(); return 1;;}
+    break;
+
+  case 7:
+#line 41 "nutshparser.y"
+    {runSetenv((yyvsp[(2) - (4)].string), (yyvsp[(3) - (4)].string)); return 1;;}
+    break;
+
+  case 8:
+#line 42 "nutshparser.y"
+    {printenv(); return 1;;}
+    break;
+
+  case 9:
+#line 43 "nutshparser.y"
+    {unsetenv((yyvsp[(2) - (3)].string)); return 1;;}
+    break;
+
+  case 10:
+#line 44 "nutshparser.y"
+    {runUnalias((yyvsp[(2) - (3)].string)); return 1;;}
+    break;
+
+  case 13:
+#line 51 "nutshparser.y"
+    {
+		addToLine((yyvsp[(1) - (1)].string))
+	;}
+    break;
+
+  case 14:
+#line 54 "nutshparser.y"
+    {
+		runNotBuilt(); clearExpression(); return 1;
+	;}
+>>>>>>> Stashed changes
     break;
 
 
 /* Line 1267 of yacc.c.  */
+<<<<<<< Updated upstream
 #line 1495 "nutshparser.tab.c"
+=======
+#line 1430 "nutshparser.tab.c"
+>>>>>>> Stashed changes
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1702,11 +1944,79 @@ yyreturn:
 #endif
   /* Make sure YYID is used.  */
   return YYID (yyresult);
+<<<<<<< Updated upstream
 }
 
 
 #line 54 "nutshparser.y"
+=======
+}
 
+
+#line 59 "nutshparser.y"
+
+
+/*void addToLine(char* token){
+	printf("hello");
+    expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
+    printf("hello");
+    strcpy(expression[expr_index], token);
+    
+    for(int i = 0; i < 10; i++){
+        printf("Elem %d %s\n",i , expression[i]);
+    }
+    printf("expression: %s\n", expression[expr_index]);
+    
+    expr_index++;
+}*/
+
+void addToLine(char* token){
+	//printf("hello");
+    expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
+    strcpy(expression[expr_index], token);
+    for(int i = 0; i < 10; i++){
+        printf("Elem %d %s\n",i , expression[i]);
+    }
+    printf("expression: %s\n", expression[expr_index]);
+    expr_index++;
+}
+>>>>>>> Stashed changes
+
+int runNotBuilt(){
+	//printf("%s\n",expression[0]);
+	char* arguments[expr_index];
+	
+	char* binPath = NULL;
+	int argLength = strlen(expression[0]);
+	binPath = malloc(5 + argLength);
+	strcat(binPath, "/bin/");
+	strcat(binPath, expression[0]);
+	
+	arguments[0] = binPath;
+	//int j = 0;
+	
+	for(int i = 1; i < expr_index; i++){
+		arguments[i] = expression[i];
+		//j++;
+	}
+	
+	for(int i = 0; i < expr_index; i++){
+		printf("Argument: %d %s\n", i, arguments[i]);
+	}
+	
+	arguments[expr_index] = NULL;
+	
+	int pid = fork();
+	if (pid == -1){
+		printf("Error in forking\n");
+	}else if(pid ==0){
+		execv(binPath, arguments);
+	}else{
+		wait(NULL);
+	}
+
+	return 1;
+}
 
 int yyerror(char *s) {
   printf("%s\n",s);
@@ -1718,7 +2028,20 @@ int runCDHome(){
 	return 1;
 }
 
+void clearExpression(){
+	//printf("clear expressionnnnnnn\n");
+	/*for(int i = 0; i < 10; i++){
+        printf("Elem from clear expression %d %s\n",i , expression[i]);
+    }*/
+    for(int i = 0; i < sizeof(expression)/sizeof(char); i++){
+        expression[i] = NULL;
+    }
+	expr_index = 0;
+}  
+
+
 int runCD(char* arg) {
+	//expr_index = 0;
 	if (arg[0] != '/') { // arg is relative path
 		strcat(varTable.word[0], "/");
 		strcat(varTable.word[0], arg);
@@ -1743,9 +2066,14 @@ int runCD(char* arg) {
                        	return 1;
 		}
 	}
+	//clearExpression();
 }
 
 int runSetAlias(char *name, char *word) {
+	// Tokenize name: alias a b
+	//Tokenized = ['alias', 'a', 'b']
+	// Check if (name == Tokenized
+
 	for (int i = 0; i < aliasIndex; i++) {
 		if(strcmp(name, word) == 0){
 			printf("Error, expansion of \"%s\" would create a loop.\n", name);
@@ -1803,6 +2131,7 @@ int printAlias(){
 	return 1;
 }
 
+<<<<<<< Updated upstream
 int unsetenvFunct(char* variable){
 
 	bool indexFound = false;
@@ -1860,3 +2189,57 @@ int unsetenvFunct(char* variable){
 	
 
 
+=======
+int runSetenv(char *variable, char *word) {
+
+	printf("hello");
+	for (int i = 0; i < varIndex; i++) {
+		if(strcmp(variable, word) == 0){
+			printf("Error: variable and word are the same value\n");
+			return 1;
+		}
+		else if((strcmp(varTable.var[i], variable) == 0) && (strcmp(varTable.word[i], word) == 0)){
+			printf("Error: same values\n");
+			return 1;
+		}
+		else if(strcmp(varTable.var[i], variable) == 0) {
+			strcpy(varTable.word[i], word);
+			return 1;
+		}
+	}
+	strcpy(varTable.var[varIndex], variable);
+	strcpy(varTable.word[varIndex], word);
+	varIndex++;
+
+	return 1;
+
+}
+
+int printenv(){
+	for(int i = 0; i < varIndex; i++){
+		printf("%s = %s\n", varTable.var[i], varTable.word[i]);
+	}
+	return 1;
+}	
+
+int runUnalias(char *name){
+	int removeIndex = -1;
+	for(int i = 0; i < aliasIndex; i++){
+		printf("%s\n", name);
+		//printf("%s\n", aliasTable.name[i]);
+		if(aliasTable.word[i] == name){
+			printf("%s", "here");
+			removeIndex = i;
+		}
+		if((removeIndex > -1) && (i != aliasIndex - 1)){
+			strcpy(aliasTable.name[i], aliasTable.name[i+1]);
+			strcpy(aliasTable.word[i], aliasTable.word[i+1]);
+			printf("%d", i);
+			printf("%s", aliasTable.name[i]);
+			printf("%s", aliasTable.word[i]);
+		}
+	}
+	aliasIndex--;
+	return 1;
+}
+>>>>>>> Stashed changes
