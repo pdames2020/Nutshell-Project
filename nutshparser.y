@@ -20,7 +20,9 @@ int printenv();
 int runUnalias(char *name);
 int runNotBuilt();
 void addToLine(char* token);
-
+void runPipeBar(char* token);
+void runPipeLesser(char* token);
+void runPipeGreater(char* token);
 
 extern char **environ;
 %}
@@ -33,8 +35,7 @@ extern char **environ;
 %%
 
 cmd_line    :
-	stmts
-	| BYE END 		                {exit(1); return 1; }
+	BYE END 		                {exit(1); return 1; }
 	| CD STRING END        			{runCD($2); return 1;}
 	| ALIAS STRING STRING END		{clearExpression(); runSetAlias($2, $3); return 1;}
 	| ALIAS END                     {printAlias(); return 1;}
@@ -42,21 +43,49 @@ cmd_line    :
 	| PRINTENV END                  {printenv(); return 1;}
 	| UNSETENV VARIABLE END         {unsetenv($2); return 1;}
 	| UNALIAS STRING END            {runUnalias($2); return 1;}
+	| stmts
 ;
+
 
 stmts:
 	| stmt stmts
 
 stmt:
 	STRING{
-		addToLine($1)
+		addToLine($1);
+	}
+	
+	|PIPE_BAR STRING{
+		runPipeBar($2);
+		addToLine($2);
+		built = true;
+		
+	}
+	| PIPE_GRTR STRING {
+				runPipeGreater($2);
+				addToLine($2);
+				built = true;
+	}
+	| PIPE_LESS STRING {
+				runPipeLesser($2);
+				addToLine($2);
+				built = true;
 	}
 	| END{
-		runNotBuilt(); clearExpression(); return 1;
+		if(built == false){
+			runNotBuilt(); 
+		}
+		
+		clearExpression(); 
+		return 1;
 	}
 ;
       
 %%
+
+void runPipeBar(char* token){
+	
+}
 
 /*void addToLine(char* token){
 	printf("hello");
@@ -250,3 +279,16 @@ int runUnalias(char *name){
 	aliasIndex--;
 	return 1;
 }
+
+/*stmts:
+	| stmt stmts
+	
+stmt:
+	STRING{
+		addToLine($1);
+	}
+	| END{
+		runNotBuilt(); clearExpression(); return 1;
+	}
+;
+*/

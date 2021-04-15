@@ -28,3 +28,5 @@ char **expression;
 int expr_index;
 
 char* subAliases(char* name);
+
+bool built = false;

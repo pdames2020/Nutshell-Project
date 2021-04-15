@@ -61,11 +61,7 @@ PATH "PATH"
 META [\<\>|"\&]
 QUOTE ["]
 NOTQUOTE [^"]
-<<<<<<< Updated upstream
-WORD [A-Za-z0-9|(\"(META)\")|(\\(META))|(\"A-Za-z0-9(META) \")]* 
-=======
 WORD [^<>|"\\&\n \t]+
->>>>>>> Stashed changes
 VARIABLE [A-Za-z][A-Za-z0-9]*
 
 %%
@@ -76,18 +72,6 @@ VARIABLE [A-Za-z][A-Za-z0-9]*
 [ ]		            { }
 bye                 { return BYE; }
 cd		            { return CD;}
-<<<<<<< Updated upstream
-pwd					{return PWD;}
-echo 				{return ECHO;}
-ssh 				{return SSH;}
-alias		        { return ALIAS;}
-ping				{return PING;}
-date				{return DATE;}
-{PIPE_BAR}          { return PIPE_BAR; }
-{PIPE_GRTR}         { return PIPE_GRTR; }
-{PIPE_LESS}         { return PIPE_LESS; }
-{PRINTENV}          { return PRINTENV;}
-=======
 alias		        {return ALIAS; }
 unalias             { return UNALIAS; }
 {PIPE_BAR}          { return PIPE_BAR; }
@@ -95,7 +79,6 @@ unalias             { return UNALIAS; }
 {PIPE_LESS}         { return PIPE_LESS; }
 {SETENV}            { return SETENV; }
 {PRINTENV}          { return PRINTENV; }
->>>>>>> Stashed changes
 "\n"		        { return END; }
 [\"]                 { BEGIN(string_condition); }
 {CHAR}+              {if(ifAlias(yytext)) {
