@@ -4,6 +4,9 @@
 // Only "alias name word", "cd word", and "bye" run.
 #include "nutshparser.tab.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "global.h"
 
 
@@ -23,14 +26,15 @@ bool ifAlias(char* name){
     }
     return false;
 }
-void addToLine(char* token){
-    expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
-    strcpy(expression[expr_index], token);
-    for(int i = 0; i < 10; i++){
-        printf("Elem %d %s\n",i , expression[i]);
-    }
-    printf("expression: %s\n", expression[expr_index]);
-}
+// void addToLine(char* token){
+//     expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
+//     strcpy(expression[expr_index], token);
+//     for(int i = 0; i < 10; i++){
+//         printf("Elem %d %s\n",i , expression[i]);
+//     }
+//     printf("expression: %s\n", expression[expr_index]);
+// }
+
 
 // void printExpression(){
 //     printf("%s\n", "Adding alias");
@@ -40,17 +44,17 @@ void addToLine(char* token){
 // }
 
 
-bool isStart(char* name){
-    printf("Name: %s\n", name);
-    printf("First token: %s\n", expression[0]);
+// bool isStart(char* name){
+//     printf("Name: %s\n", name);
+//     printf("First token: %s\n", expression[0]);
 
-    if(expression[0] == name){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
+//     if(expression[0] == NULL){
+//         return true;
+//     }
+//     else{
+//         return false;
+//     }
+// }
 %}
 %array
 %option noyywrap
@@ -68,19 +72,17 @@ PATH "PATH"
 META [\<\>|"\&]
 QUOTE ["]
 NOTQUOTE [^"]
-WORD [^<>|"\\&\n \t]+
 VARIABLE [A-Za-z][A-Za-z0-9]*
 
 %%
 
-<string_condition>{ANYCHAR}+     { yylval.string = strdup(yytext); addToLine(yytext); return STRING;}
+<string_condition>{ANYCHAR}+     { yylval.string = strdup(yytext); return STRING;}
 <string_condition>[\"]          {BEGIN(INITIAL);}
 
 [ ]		            { }
 bye                 { return BYE; }
 cd		            { return CD;}
-ls                  { return LS;}
-alias		        {expr_index = 0; addToLine("alias"); expr_index++; return ALIAS; }
+alias		        { return ALIAS; }
 unalias             { return UNALIAS; }
 {PIPE_BAR}          { return PIPE_BAR; }
 {PIPE_GRTR}         { return PIPE_GRTR; }
@@ -90,30 +92,20 @@ unalias             { return UNALIAS; }
 "\n"		        { return END; }
 [\"]                 { BEGIN(string_condition); }
 {CHAR}+              {
-                        if(ifAlias(yytext)){
-                            printf("yytext: %s\n", yytext);
-                            addToLine(yytext);
-                            expr_index++;
-                            return STRING;
-                            
-                        }else if(ifAlias(yytext) && isStart(yytext)){
-                            //source: https://www.cs.princeton.edu/~appel/modern/c/software/flex/flex.html
+                       if(ifAlias(yytext)) {
+                        printf("yytext: %s\n", yytext);
+                        //source: https://www.cs.princeton.edu/~appel/modern/c/software/flex/flex.html
                            char *yycopy = strdup( subAliases(yytext) );
-                           addToLine(yycopy);
                            for ( int i = strlen(subAliases(yytext)) - 1; i >= 0; --i )
                                unput( yycopy[i] );
                            free( yycopy );
-                           return STRING;
-                           
-                        }else{
-                            printf("yytext: %s\n", yytext);
-                            yylval.string = strdup(yytext);
-                            addToLine(yytext);
-                            expr_index++;
-                            return STRING;
-                        }
-
-                     }
-{WORD}              { return WORD; }
+                    } else {
+                        printf("yytext: %s\n", yytext);
+                        yylval.string = strdup(yytext);
+                        return STRING;
+                    };
+                     
+                    }
+                     
 
 %%

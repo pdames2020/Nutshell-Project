@@ -13,6 +13,19 @@ int yylex(void);
 int yyerror(char *s);
 int runCD(char* arg);
 int runSetAlias(char *name, char *word);
+int printAlias();
+void clearExpression();
+int runSetenv(char *variable, char *word);
+int printenv();
+int runUnalias(char *name);
+int runNotBuilt();
+void addToLine(char* token);
+int runPipeBar(char* token);
+int runPipeGreater(char* token);
+int runPipeLess(char* token);
+bool isBuiltIn(char* token);
+
+
 
 extern char **environ;
 %}
@@ -20,22 +33,146 @@ extern char **environ;
 %union {char *string;}
 
 %start cmd_line
-%token <string> BYE CD STRING ALIAS END SETENV PRINTENV UNSETENV UNALIAS LS WC VARIABLE PIPE_BAR PIPE_GRTR PIPE_LESS WORD
+%token <string> BYE CD STRING ALIAS END SETENV PRINTENV UNSETENV UNALIAS LS WC VARIABLE PIPE_BAR PIPE_GRTR PIPE_LESS
 
 %%
 cmd_line    :
-	BYE END 		                {exit(1); return 1; }
-	| CD STRING END        			{runCD($2); return 1;}
-	| ALIAS STRING STRING END		{clearExpression(); runSetAlias($2, $3); return 1;}
-	| ALIAS END                         {printAlias(); return 1;}
-    | SETENV STRING STRING END      {runSetenv($2, $3); return 1;} 
-	| PRINTENV END                      { printenv(); return 1;}
-	| UNSETENV VARIABLE END         {unsetenv($2); return 1;}
-	| UNALIAS STRING END               {runUnalias($2); return 1;}
-    | STRING STRING END                 {clearExpression(); return 1;}
+    stmts
+	| BYE END 		                { exit(1); return 1; }
+	| CD STRING END        			{ runCD($2); return 1; }
+	| ALIAS STRING STRING END		{ runSetAlias($2, $3); return 1; }
+	| ALIAS END                     { printAlias(); return 1; }
+    | SETENV STRING STRING END        { runSetenv($2, $3); return 1; } 
+	| PRINTENV END                  { printenv(); return 1; }
+	| UNSETENV STRING END         { unsetenv($2); return 1; }
+	| UNALIAS STRING END            { runUnalias($2); return 1; }
+;
 
+stmts:
+    | stmt stmts
+
+
+stmt:
+	STRING{
+		addToLine($1);
+		//Example printenv > f1.txt --> STRING PIPE_GRTR STRING
+		
+	}
+	|PIPE_BAR STRING{
+		runPipeBar($2);
+		addToLine($2);
+		//built = true;
+		
+	}
+	| PIPE_GRTR STRING {
+		        // Check the last thing added to line
+				char* last_cmd = expression[expr_index];
+				// Check if command is a valid command
+				char comm_name [((sizeof(last_cmd) / sizeof(char)) + 27)] ;
+                strcat(comm_name, last_cmd);
+                strcat(comm_name, " --version > /dev/null 2>&1");
+				int ret = system(comm_name);
+				// if is a valid command add to commmand table.
+				if(ret == 0 || isBuiltIn(last_cmd)){
+					strcpy(currCommand.command, last_cmd);
+					strcpy(currCommand.args, NULL);
+					// Not really sure but i'm trying to put the command object
+					// into the command table
+					commandTable.commands[commandIndex] = currCommand;
+					commandIndex++;
+					// Put the other string into the command table as well
+					strcpy(currCommand.command, $2);
+					strcpy(currCommand.args, NULL);
+					commandTable.commands[commandIndex] = currCommand;
+					commandIndex++;
+
+				}
+
+
+				runPipeGreater($2);
+				addToLine($2);
+				// built = true;
+	}
+	| PIPE_LESS STRING {
+				runPipeLesser($2);
+				addToLine($2);
+				// built = true;
+	}
+
+	| END{
+		// if(built == false){
+		// 	runNotBuilt(); 
+		// }
+		
+		clearExpression(); 
+		return 1;
+	}
+;
 
 %%
+
+int runPipeBar(char* token){
+
+}
+
+bool isBuiltIn(char* token){
+	for(int i = 0; i < (sizeof(builtIns)/sizeof(char)); i++){
+		if (token == builtIns[i]){
+			return true;
+		}
+	}
+	return false;
+
+};
+
+void addToLine(char* token){
+	//printf("hello");
+    expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
+    strcpy(expression[expr_index], token);
+    for(int i = 0; i < 10; i++){
+        printf("Elem %d %s\n",i , expression[i]);
+    }
+    printf("expression: %s\n", expression[expr_index]);
+    expr_index++;
+}
+
+
+int runNotBuilt(){
+	//printf("%s\n",expression[0]);
+	char* arguments[expr_index];
+	
+	char* binPath = NULL;
+	int argLength = strlen(expression[0]);
+	binPath = malloc(5 + argLength);
+	strcat(binPath, "/bin/");
+	strcat(binPath, expression[0]);
+	
+	arguments[0] = binPath;
+	//int j = 0;
+	
+	for(int i = 1; i < expr_index; i++){
+		arguments[i] = expression[i];
+		//j++;
+	}
+	
+	for(int i = 0; i < expr_index; i++){
+		printf("Argument: %d %s\n", i, arguments[i]);
+	}
+	
+	arguments[expr_index] = NULL;
+	
+	int pid = fork();
+	if (pid == -1){
+		printf("Error in forking\n");
+	}else if(pid == 0){
+		execv(binPath, arguments);
+	}else{
+		wait(NULL);
+	}
+
+	return 1;
+}
+
 
 int yyerror(char *s) {
   printf("%s\n",s);
@@ -43,8 +180,11 @@ int yyerror(char *s) {
   }
 
 void clearExpression(){
-    free(expression);
-	expr_index = 0;
+    for(int i = 0; i < sizeof(expression)/sizeof(char); i++){
+        expression[i] = NULL;
+    }
+    expr_index = 0;
+	output_index  = 0;
 }  
 
 
@@ -70,16 +210,18 @@ int runCD(char* arg) {
 		}
 		else {
 			printf("Directory not found\n");
-                       	return 1;
+            return 1;
 		}
 	}
 }
 
 int runSetAlias(char *name, char *word) {
+	expr_index = 0;
 	// Tokenize name: alias a b
 	//Tokenized = ['alias', 'a', 'b']
 	// Check if (name == Tokenized
-
+	printf("%s\n", name);
+	printf("%s\n", word);
 	for (int i = 0; i < aliasIndex; i++) {
 		if(strcmp(name, word) == 0){
 			printf("Error, expansion of \"%s\" would create a loop.\n", name);
@@ -90,14 +232,17 @@ int runSetAlias(char *name, char *word) {
 			return 1;
 		}
 		else if(strcmp(aliasTable.name[i], name) == 0) {
+			printf("hello");
 			strcpy(aliasTable.word[i], word);
 			return 1;
 		}
 	}
+	printf("hello");
 	strcpy(aliasTable.name[aliasIndex], name);
 	strcpy(aliasTable.word[aliasIndex], word);
 	aliasIndex++;
 
+	
 	return 1;
 }
 
@@ -143,6 +288,7 @@ int runSetenv(char *variable, char *word) {
 int printenv(){
 	for(int i = 0; i < varIndex; i++){
 		printf("%s = %s\n", varTable.var[i], varTable.word[i]);
+	    output[output_index] = (char*) malloc((sizeof(varTable.var[i]) + 1) * sizeof(char));
 	}
 	return 1;
 }	

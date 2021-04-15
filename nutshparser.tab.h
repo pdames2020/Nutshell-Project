@@ -63,8 +63,7 @@ extern int yydebug;
     VARIABLE = 269,
     PIPE_BAR = 270,
     PIPE_GRTR = 271,
-    PIPE_LESS = 272,
-    WORD = 273
+    PIPE_LESS = 272
   };
 #endif
 
@@ -72,10 +71,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 20 "nutshparser.y"
+#line 33 "nutshparser.y"
 char *string;
 
-#line 79 "nutshparser.tab.h"
+#line 78 "nutshparser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
