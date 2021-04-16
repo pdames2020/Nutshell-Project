@@ -4,9 +4,6 @@
 // Only "alias name word", "cd word", and "bye" run.
 #include "nutshparser.tab.h"
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "global.h"
 
 
@@ -26,14 +23,6 @@ bool ifAlias(char* name){
     }
     return false;
 }
-// void addToLine(char* token){
-//     expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
-//     strcpy(expression[expr_index], token);
-//     for(int i = 0; i < 10; i++){
-//         printf("Elem %d %s\n",i , expression[i]);
-//     }
-//     printf("expression: %s\n", expression[expr_index]);
-// }
 
 
 // void printExpression(){
@@ -44,17 +33,17 @@ bool ifAlias(char* name){
 // }
 
 
-// bool isStart(char* name){
-//     printf("Name: %s\n", name);
-//     printf("First token: %s\n", expression[0]);
+bool isStart(char* name){
+    printf("Name: %s\n", name);
+    printf("First token: %s\n", expression[0]);
 
-//     if(expression[0] == NULL){
-//         return true;
-//     }
-//     else{
-//         return false;
-//     }
-// }
+    if(expression[0] == name){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 %}
 %array
 %option noyywrap
@@ -62,9 +51,9 @@ bool ifAlias(char* name){
 
 CHAR            [.A-Za-z0-9!\/_-][.A-Za-z0-9!\/_-]*
 ANYCHAR            [)(*&%$#@!`;,\.a-zA-Z0-9'/*_=~ -][)(*&%$#@!`;,\.a-zA-Z0-9'/*_=~ -]*
-PIPE_BAR [|]
-PIPE_GRTR [>]
-PIPE_LESS [<]
+PIPE_BAR [\|]
+OUTPUT_REDIRECT [>]
+INPUT_REDIRECT [<]
 SETENV "setenv" 
 PRINTENV "printenv"  
 HOME "HOME"
@@ -72,27 +61,27 @@ PATH "PATH"
 META [\<\>|"\&]
 QUOTE ["]
 NOTQUOTE [^"]
+WORD [^<>|"\\&\n \t]+
 VARIABLE [A-Za-z][A-Za-z0-9]*
 
 %%
 
-<string_condition>{ANYCHAR}+     { yylval.string = strdup(yytext); return STRING;}
+<string_condition>{ANYCHAR}+     {yylval.string = strdup(yytext);return STRING;}
 <string_condition>[\"]          {BEGIN(INITIAL);}
 
 [ ]		            { }
 bye                 { return BYE; }
 cd		            { return CD;}
-alias		        { return ALIAS; }
+alias		        {return ALIAS; }
 unalias             { return UNALIAS; }
-{PIPE_BAR}          { return PIPE_BAR; }
-{PIPE_GRTR}         { return PIPE_GRTR; }
-{PIPE_LESS}         { return PIPE_LESS; }
+{PIPE_BAR}          { printf("%s","got pipe\n"); return PIPE_BAR; }
+{OUTPUT_REDIRECT}         { return OUTPUT_REDIRECT; }
+{INPUT_REDIRECT}         { return INPUT_REDIRECT; }
 {SETENV}            { return SETENV; }
 {PRINTENV}          { return PRINTENV; }
 "\n"		        { return END; }
 [\"]                 { BEGIN(string_condition); }
-{CHAR}+              {
-                       if(ifAlias(yytext)) {
+{CHAR}+              {if(ifAlias(yytext)) {
                         printf("yytext: %s\n", yytext);
                         //source: https://www.cs.princeton.edu/~appel/modern/c/software/flex/flex.html
                            char *yycopy = strdup( subAliases(yytext) );
@@ -104,8 +93,5 @@ unalias             { return UNALIAS; }
                         yylval.string = strdup(yytext);
                         return STRING;
                     };
-                     
-                    }
-                     
-
+                     }
 %%

@@ -488,9 +488,6 @@ char *yytext_ptr;
 // Only "alias name word", "cd word", and "bye" run.
 #include "nutshparser.tab.h"
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "global.h"
 
 
@@ -510,14 +507,6 @@ bool ifAlias(char* name){
     }
     return false;
 }
-// void addToLine(char* token){
-//     expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
-//     strcpy(expression[expr_index], token);
-//     for(int i = 0; i < 10; i++){
-//         printf("Elem %d %s\n",i , expression[i]);
-//     }
-//     printf("expression: %s\n", expression[expr_index]);
-// }
 
 
 // void printExpression(){
@@ -528,20 +517,20 @@ bool ifAlias(char* name){
 // }
 
 
-// bool isStart(char* name){
-//     printf("Name: %s\n", name);
-//     printf("First token: %s\n", expression[0]);
+bool isStart(char* name){
+    printf("Name: %s\n", name);
+    printf("First token: %s\n", expression[0]);
 
-//     if(expression[0] == NULL){
-//         return true;
-//     }
-//     else{
-//         return false;
-//     }
-// }
-#line 543 "lex.yy.c"
+    if(expression[0] == name){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+#line 532 "lex.yy.c"
 
-#line 545 "lex.yy.c"
+#line 534 "lex.yy.c"
 
 #define INITIAL 0
 #define string_condition 1
@@ -759,10 +748,10 @@ YY_DECL
 		}
 
 	{
-#line 77 "nutshscanner.l"
+#line 67 "nutshscanner.l"
 
 
-#line 766 "lex.yy.c"
+#line 755 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -821,80 +810,79 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 79 "nutshscanner.l"
-{ yylval.string = strdup(yytext); return STRING;}
+#line 69 "nutshscanner.l"
+{yylval.string = strdup(yytext);return STRING;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 80 "nutshscanner.l"
+#line 70 "nutshscanner.l"
 {BEGIN(INITIAL);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 82 "nutshscanner.l"
+#line 72 "nutshscanner.l"
 { }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 83 "nutshscanner.l"
+#line 73 "nutshscanner.l"
 { return BYE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 84 "nutshscanner.l"
+#line 74 "nutshscanner.l"
 { return CD;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 85 "nutshscanner.l"
-{ return ALIAS; }
+#line 75 "nutshscanner.l"
+{return ALIAS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 86 "nutshscanner.l"
+#line 76 "nutshscanner.l"
 { return UNALIAS; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 87 "nutshscanner.l"
-{ return PIPE_BAR; }
+#line 77 "nutshscanner.l"
+{ printf("%s","got pipe\n"); return PIPE_BAR; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 88 "nutshscanner.l"
-{ return PIPE_GRTR; }
+#line 78 "nutshscanner.l"
+{ return OUTPUT_REDIRECT; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 89 "nutshscanner.l"
-{ return PIPE_LESS; }
+#line 79 "nutshscanner.l"
+{ return INPUT_REDIRECT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 90 "nutshscanner.l"
+#line 80 "nutshscanner.l"
 { return SETENV; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 91 "nutshscanner.l"
+#line 81 "nutshscanner.l"
 { return PRINTENV; }
 	YY_BREAK
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 92 "nutshscanner.l"
+#line 82 "nutshscanner.l"
 { return END; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 93 "nutshscanner.l"
+#line 83 "nutshscanner.l"
 { BEGIN(string_condition); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 94 "nutshscanner.l"
-{
-                       if(ifAlias(yytext)) {
+#line 84 "nutshscanner.l"
+{if(ifAlias(yytext)) {
                         printf("yytext: %s\n", yytext);
                         //source: https://www.cs.princeton.edu/~appel/modern/c/software/flex/flex.html
                            char *yycopy = strdup( subAliases(yytext) );
@@ -906,15 +894,14 @@ YY_RULE_SETUP
                         yylval.string = strdup(yytext);
                         return STRING;
                     };
-                     
-                    }
+                     }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 111 "nutshscanner.l"
+#line 97 "nutshscanner.l"
 ECHO;
 	YY_BREAK
-#line 918 "lex.yy.c"
+#line 905 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(string_condition):
 	yyterminate();
@@ -1920,6 +1907,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 111 "nutshscanner.l"
-
+#line 97 "nutshscanner.l"
 
