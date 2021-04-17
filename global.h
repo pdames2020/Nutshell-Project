@@ -1,8 +1,15 @@
+#ifndef GLOBAL_H
+#define GLOBAL_H
+
 #include "stdbool.h"
 #include <limits.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <vector>
+#include <iostream>
+#include <string>
+using namespace std;
 
 
 struct evTable {
@@ -15,18 +22,44 @@ struct aTable {
 	char word[128][100];
 };
 
-char cwd[PATH_MAX];
 
-struct evTable varTable;
+struct Command{
+   string command;
+   vector<string> args;
+};
 
-struct aTable aliasTable;
+struct Pipeline{
+   vector<Command> commands;
+   bool background;
+};
 
-int aliasIndex, varIndex;
+extern struct Command currCommand;
+extern struct Pipeline commandTable;
 
-char **expression;
+extern string input;
+extern string output;
 
-int expr_index;
 
-char* subAliases(char* name);
+extern char cwd[PATH_MAX];
 
-bool built;
+extern struct evTable varTable;
+
+extern struct aTable aliasTable;
+
+extern int aliasIndex, varIndex;
+
+extern vector<string> expression;
+
+extern int expr_index;
+
+extern vector<string> cmd; 
+
+extern vector<string> cmdTblCom;
+
+extern vector<string> cmdTblArg;
+
+extern char* subAliases(char* name);
+
+extern bool built;
+
+#endif

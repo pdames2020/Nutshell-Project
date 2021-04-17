@@ -1,17 +1,8 @@
 # Simple Makefile
-
-CC=/usr/bin/cc
-
-all:  bison-config flex-config nutshell
-
-bison-config:
+all:
 	bison -d nutshparser.y
-
-flex-config:
 	flex nutshscanner.l
-
-nutshell: 
-	$(cc) nutshell.c nutshparser.tab.c lex.yy.c -o nutshell.o
+	g++ -o nutshell.o nutshell.cpp nutshparser.tab.c lex.yy.c
 
 clean:
 	rm nutshparser.tab.c nutshparser.tab.h lex.yy.c

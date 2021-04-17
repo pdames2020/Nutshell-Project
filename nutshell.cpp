@@ -6,16 +6,33 @@
 #include <string.h>
 #include "global.h"
 #include <unistd.h>
+#include <limits.h>
+#include <filesystem>
+using namespace std;
 
 char *getcwd(char *buf, size_t size);
 int yyparse();
 
 int main()
 {
-    aliasIndex = 0;
-    varIndex = 0;
-    expr_index = 0;
-    expression = malloc(10 * sizeof(char*));
+    int aliasIndex = 0;
+    int varIndex = 0;
+    int expr_index = 0;
+    string input = "";
+    string output = "";
+    // std::filesystem::path cwd = std::filesystem::current_path();
+    char cwd[PATH_MAX];
+    struct evTable varTable;
+    struct aTable  aliasTable;
+    struct Command currCommand;
+    struct Pipeline commandTable;
+    vector<string> expression;
+    vector<string> cmd; 
+    vector<string> cmdTblCom;
+    vector<string> cmdTblArg;
+    char* subAliases(char* name);
+    bool built;
+
 
     getcwd(cwd, sizeof(cwd));
 
@@ -35,7 +52,7 @@ int main()
     system("clear");
     while(1)
     {
-        printf("[%s]>> ", varTable.word[2]);
+        cout << varTable.word[2] << endl;;
         yyparse();
     }
 

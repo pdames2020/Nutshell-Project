@@ -6,11 +6,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "global.h"
 #include <errno.h>
+#include "global.h"
+using namespace std;
 
 int yylex(void);
-int yyerror(char *s);
+int yyerror(char* s);
 int runCD(char* arg);
 int runSetAlias(char *name, char *word);
 void clearExpression();
@@ -19,13 +20,31 @@ int runSetenv(char *variable, char *word) ;
 int printenv();
 int runUnalias(char *name);
 int runNotBuilt();
-void addToLine(char* token);
+void addToLine(string token);
 void runPipeBar(char* token);
 void runPipeLesser(char* token);
 void runPipeGreater(char* token);
 void runCommandTable();
+void clearCommandPlusArg();
+void clearCurrCommand();
 
 extern char **environ;
+int aliasIndex;
+int varIndex;
+int expr_index;
+string input = "";
+string output = "";
+char cwd[PATH_MAX];
+struct evTable varTable;
+struct aTable  aliasTable;
+struct Command currCommand;
+struct Pipeline commandTable;
+vector<string> expression;
+vector<string> cmd; 
+vector<string> cmdTblCom;
+vector<string> cmdTblArg;
+char* subAliases(char* name);
+bool built;
 %}
 
 %union {char *string;}
@@ -56,7 +75,7 @@ stmt:
 		addToLine($1);
 	}
 	| PIPE_BAR STRING{
-		printf("%s\n", "add pipe to bar");
+		cout << "add pipe to bar" << endl;
 		addToLine("|");
 		addToLine($2);
 		// runPipeBar($2);
@@ -78,58 +97,89 @@ stmt:
 		// 	runNotBuilt(); 
 		// }
 		//Line: cat f3.txt | head -2 | tail -1
+		// wc -l f3.txt f1.txt | sort
 
-		char** cmd; 
-		char** cmdTblCom;
-		char** cmdTblArg;
 		int start_index = 0;
 		int i = 0;
-		printf("Expr_index: %d\n", expr_index);
+		cout << "Expr_index:" << expr_index << endl;
 		while(i < expr_index){
-			printf("first for loop\n");
-			printf("This is expr elem %d: %s\n", i, expression[i]);
-			if(strcmp(expression[i],"|") == 0){
+			cout << "First for loop" << endl;
+			cout << "This is expr elem " << i << " " << expression[i] << endl;
+
+			if((expression[i] == "|") || (i == (expression.size()-1))){
+				// if((sizeof(cmd)/sizeof(char)) >= 1){
+				// 	for(int i = 0; i < sizeof(cmd); i++)
+				// 		cmd[i] = NULL;
+				//}
+				
 				int j = 0;
-				printf("This is i before while: %d\n", i);
-				while(start_index < i){
-					printf("1");
-					cmd[j] = (char*) malloc((sizeof(expression[start_index]) + 1) * sizeof(char));
-					printf("2");
-					strcpy(cmd[j], expression[start_index]);
-					printf("3");
-					printf("cmd: %s\n", cmd[j]);
+				cout << "This is i before while: " << i << endl;
+				cout << "This is the start_index: " << start_index << endl;
+
+				while((start_index < i) || (start_index == expression.size()-1)){
+				    cout << "This is the start_index: " << start_index << endl;
+				    cout << "This is i: " << i << endl;
+				    cout << "This is j: " << j << endl;
+
+
+
+					cout << "Expression using start index: " << expression[start_index] << endl;
+				
+					cmd.push_back(expression[start_index]);
+					cout << cmd.back() << endl;
 					j++;
 					start_index++;
 				}
 				start_index = i + 1;	
-				for(int k = 0; k < (sizeof(cmd)/sizeof(char)); k++){
-					printf("second for loop\n");
+				for(int k = 0; k < cmd.size(); k++){
+					cout << "second for loop" << endl;
 					if(k == 0){
-						cmdTblCom[k] = (char*) malloc((sizeof(cmd[0]) + 1) * sizeof(char));
-						strcpy(cmdTblCom[k], cmd[0]);
-						printf("Command: %s\n", cmd[0]);
+						//cmdTblCom[k] = (char*) malloc((sizeof(cmd[0]) + 1) * sizeof(char));
+						//strcpy(cmdTblCom[k], cmd[0]);
+						//printf("Command: %s\n", cmd[0]);
+						cout << "Command: " << cmd[k] << endl;
+						// cmdTblCom.push_back(cmd[k]);
+						currCommand.command = cmd[k];
 					}
 					else{
-						cmdTblArg[k - 1] = (char*) malloc((sizeof(cmd[k]) + 1) * sizeof(char));
-						strcpy(cmdTblArg[k - 1], cmd[k]);	
-						printf("Argument: %s\n", cmd[k]);
+						//cmdTblArg[k - 1] = (char*) malloc((sizeof(cmd[k]) + 1) * sizeof(char));
+						//strcpy(cmdTblArg[k - 1], cmd[k]);	
+						//printf("Argument: %s\n", cmd[k]);
+						cout << "Argument: " << cmd[k] << endl;
+						currCommand.args.push_back(cmd[k]);
 					}
 				}
+				clearCommandPlusArg();
+				// Add to command table
+				commandTable.commands.push_back(currCommand);
+				clearCurrCommand();
+				
 			}
-			else{
 				i++;
-			}
 		}
 		
-		
+		//Print out the contents of the command table.
+		for(int i = 0; i < commandTable.commands.size(); i++){
+			cout << "This is command "<< i << " "<< commandTable.commands[i].command << endl;
+			for (int j = 0; j < commandTable.commands[i].args.size(); j++){
+				cout << "This is arg " << j << " "<<  commandTable.commands[i].args[j] << endl;
+			}
+		}
 		clearExpression(); 
 		return 1;
 	}
 ;
       
 %%
+void clearCommandPlusArg(){
+	cmd.clear();
+}
+void clearCurrCommand(){
+	currCommand.command.clear();
+	currCommand.args.clear();
+}
 
-void runPipeBar(char* token){
+void runPipeBar(string token){
 	
 }
 void runCommandTable(){
@@ -158,68 +208,71 @@ void runCommandTable(){
     expr_index++;
 }*/
 
-void addToLine(char* token){
+void addToLine(string token){
 	//printf("hello");
-    expression[expr_index] = (char*) malloc((sizeof(token) + 1) * sizeof(char));
-    strcpy(expression[expr_index], token);
-    for(int i = 0; i < 10; i++){
-        printf("Elem %d %s\n",i , expression[i]);
+	cout << "This is the expr_index: " << expr_index << endl;
+	expression.push_back(token);
+    for(int i = 0; i < expression.size(); i++){
+		cout << "Elem " << i << " " << expression[i] << endl;
     }
-    printf("expression: %s\n", expression[expr_index]);
+	cout << "expression: " << expression[expr_index] << endl; 
     expr_index++;
+}
+
+char *convert(const string & s)
+{
+   char *pc = new char[s.size()+1];
+   strcpy(pc, s.c_str());
+   return pc; 
 }
 
 int runNotBuilt(){
 	//printf("%s\n",expression[0]);
 	char* arguments[expr_index];
 	
-	char* binPath = NULL;
-	int argLength = strlen(expression[0]);
-	binPath = malloc(5 + argLength);
-	strcat(binPath, "/bin/");
-	strcat(binPath, expression[0]);
+	string binPath = "/bin/";
+	int argLength = expression[0].length();
+    binPath.append(expression[0]);
+
+	char *c_binPath = (char*)binPath.c_str();
+
 	
-	arguments[0] = binPath;
+	arguments[0] = c_binPath;
 	//int j = 0;
 	
 	for(int i = 1; i < expr_index; i++){
-		arguments[i] = expression[i];
+		arguments[i] = (char* )expression[i].c_str();
 		//j++;
 	}
 	
 	for(int i = 0; i < expr_index; i++){
-		printf("Argument: %d %s\n", i, arguments[i]);
+		cout << "Argument: "<< i << " " << arguments[i] << endl;
 	}
-	
+
+	//transform(arguments.begin(), arguments.end(), back_inserter(arguments), convert);   
+
 	arguments[expr_index] = NULL;
 	
 	int pid = fork();
 	if (pid == -1){
-		printf("Error in forking\n");
+		cout << "Error in forking" << endl;
 	}else if(pid ==0){
-		execv(binPath, arguments);
-	}else{
-		wait(NULL);
+		execv(c_binPath, arguments);
 	}
 
 	return 1;
 }
 
 int yyerror(char *s) {
-  printf("%s\n",s);
+  cout << s << endl;
   return 0;
   }
 
 void clearExpression(){
-	//printf("clear expressionnnnnnn\n");
-	/*for(int i = 0; i < 10; i++){
-        printf("Elem from clear expression %d %s\n",i , expression[i]);
-    }*/
-    for(int i = 0; i < sizeof(expression)/sizeof(char); i++){
-        expression[i] = NULL;
-    }
+    expression.clear();
 	expr_index = 0;
 }  
+
 
 
 int runCD(char* arg) {
@@ -234,7 +287,7 @@ int runCD(char* arg) {
 		else {
 			getcwd(cwd, sizeof(cwd));
 			strcpy(varTable.word[0], cwd);
-			printf("Directory not found\n");
+			cout << "Directory not found" << endl;
 			return 1;
 		}
 	}
@@ -244,10 +297,11 @@ int runCD(char* arg) {
 			return 1;
 		}
 		else {
-			printf("Directory not found\n");
-                       	return 1;
+			cout << "Directory not found" << endl;
+            return 1;
 		}
 	}
+	return 1;
 	//clearExpression();
 }
 
@@ -258,11 +312,11 @@ int runSetAlias(char *name, char *word) {
 
 	for (int i = 0; i < aliasIndex; i++) {
 		if(strcmp(name, word) == 0){
-			printf("Error, expansion of \"%s\" would create a loop.\n", name);
+			cout << "Error, expansion of " << name << " would create a loop." << endl;
 			return 1;
 		}
 		else if((strcmp(aliasTable.name[i], name) == 0) && (strcmp(aliasTable.word[i], word) == 0)){
-			printf("Error, expansion of \"%s\" would create a loop.\n", name);
+			cout << "Error, expansion of " << name << " would create a loop." << endl;
 			return 1;
 		}
 		else if(strcmp(aliasTable.name[i], name) == 0) {
@@ -279,21 +333,20 @@ int runSetAlias(char *name, char *word) {
 
 int printAlias(){
 	for(int i = 0; i < aliasIndex; i++){
-		printf("%s%s%s\n", aliasTable.name[i], "=", aliasTable.word[i]);
+		cout << aliasTable.name[i] << "=" << aliasTable.word[i] << endl;
 	}
 	return 1;
 }
 
 int runSetenv(char *variable, char *word) {
 
-	printf("hello");
 	for (int i = 0; i < varIndex; i++) {
 		if(strcmp(variable, word) == 0){
-			printf("Error: variable and word are the same value\n");
+			cout << "Error: variable and word are the same value" << endl;
 			return 1;
 		}
 		else if((strcmp(varTable.var[i], variable) == 0) && (strcmp(varTable.word[i], word) == 0)){
-			printf("Error: same values\n");
+			cout << "Error: same values" << endl;
 			return 1;
 		}
 		else if(strcmp(varTable.var[i], variable) == 0) {
@@ -311,7 +364,7 @@ int runSetenv(char *variable, char *word) {
 
 int printenv(){
 	for(int i = 0; i < varIndex; i++){
-		printf("%s = %s\n", varTable.var[i], varTable.word[i]);
+		cout << varTable.var[i] << " = "<< varTable.word[i]  << endl;
 	}
 	return 1;
 }	
@@ -319,18 +372,19 @@ int printenv(){
 int runUnalias(char *name){
 	int removeIndex = -1;
 	for(int i = 0; i < aliasIndex; i++){
-		printf("%s\n", name);
+		cout << name << endl;
 		//printf("%s\n", aliasTable.name[i]);
 		if(aliasTable.word[i] == name){
-			printf("%s", "here");
+			cout << "here" << endl;
 			removeIndex = i;
 		}
 		if((removeIndex > -1) && (i != aliasIndex - 1)){
 			strcpy(aliasTable.name[i], aliasTable.name[i+1]);
 			strcpy(aliasTable.word[i], aliasTable.word[i+1]);
-			printf("%d", i);
-			printf("%s", aliasTable.name[i]);
-			printf("%s", aliasTable.word[i]);
+			cout << i << endl;
+			cout << aliasTable.name[i] << endl;
+			cout << aliasTable.word[i] << endl;
+
 		}
 	}
 	aliasIndex--;

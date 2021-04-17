@@ -518,8 +518,8 @@ bool ifAlias(char* name){
 
 
 bool isStart(char* name){
-    printf("Name: %s\n", name);
-    printf("First token: %s\n", expression[0]);
+	cout << "Name" << name << endl;
+	cout << "First toke: " << expression[0] << endl;
 
     if(expression[0] == name){
         return true;
@@ -846,7 +846,7 @@ YY_RULE_SETUP
 case 8:
 YY_RULE_SETUP
 #line 77 "nutshscanner.l"
-{ printf("%s","got pipe\n"); return PIPE_BAR; }
+{ return PIPE_BAR; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
@@ -883,18 +883,18 @@ case 15:
 YY_RULE_SETUP
 #line 84 "nutshscanner.l"
 {if(ifAlias(yytext)) {
-                        printf("yytext: %s\n", yytext);
+                        cout << "yytext: " << yytext << endl;
                         //source: https://www.cs.princeton.edu/~appel/modern/c/software/flex/flex.html
                            char *yycopy = strdup( subAliases(yytext) );
                            for ( int i = strlen(subAliases(yytext)) - 1; i >= 0; --i )
                                unput( yycopy[i] );
                            free( yycopy );
                     } else {
-                        printf("yytext: %s\n", yytext);
+                        cout << "yytext: " << yytext << endl;
                         yylval.string = strdup(yytext);
                         return STRING;
                     };
-                     }
+                }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
