@@ -72,7 +72,7 @@ VARIABLE [A-Za-z][A-Za-z0-9]*
 [ ]		            { }
 bye                 { return BYE; }
 cd		            { return CD;}
-alias		        {return ALIAS; }
+alias		        { return ALIAS; }
 unalias             { return UNALIAS; }
 {PIPE_BAR}          { return PIPE_BAR; }
 {OUTPUT_REDIRECT}         { return OUTPUT_REDIRECT; }

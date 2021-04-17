@@ -27,6 +27,7 @@ void runPipeGreater(char* token);
 void runCommandTable();
 void clearCommandPlusArg();
 void clearCurrCommand();
+void addToCommandTable();
 
 extern char **environ;
 int aliasIndex;
@@ -41,8 +42,6 @@ struct Command currCommand;
 struct Pipeline commandTable;
 vector<string> expression;
 vector<string> cmd; 
-vector<string> cmdTblCom;
-vector<string> cmdTblArg;
 char* subAliases(char* name);
 bool built;
 %}
@@ -55,14 +54,14 @@ bool built;
 %%
 
 cmd_line    :
-	BYE END 		                {exit(1); return 1; }
-	| CD STRING END        			{runCD($2); return 1;}
-	| ALIAS STRING STRING END		{clearExpression(); runSetAlias($2, $3); return 1;}
-	| ALIAS END                     {printAlias(); return 1;}
-    | SETENV STRING STRING END      {runSetenv($2, $3); return 1;} 
-	| PRINTENV END                  {printenv(); return 1;}
-	| UNSETENV VARIABLE END         {unsetenv($2); return 1;}
-	| UNALIAS STRING END            {runUnalias($2); return 1;}
+	BYE END 		                {exit(1); addToCommandTable(); return 1; }
+	| CD STRING END        			{addToLine("cd"); addToLine($2); addToCommandTable(); runCommandTable(); return 1;}
+	| ALIAS STRING STRING END		{addToLine("alias"); addToLine($2); addToLine($3); addToCommandTable(); runCommandTable(); return 1;}
+	| ALIAS END                     {addToLine("alias"); addToCommandTable(); runCommandTable() return 1;}
+    | SETENV STRING STRING END      {addToLine("setenv"); addToLine($2); addToLine($3); addToCommandTable(); runCommandTable(); return 1;} 
+	| PRINTENV END                  {addToLine("printenv"); addToCommandTable(); runCommandTable(); return 1;}
+	| UNSETENV STRING END           {addToLine("unsetenv"); addToLine($2); addToCommandTable(); runCommandTable(); return 1;}
+	| UNALIAS STRING END            {addToLine("unalias"); addToLine($2); addToCommandTable(); runCommandTable(); return 1;}
 	| stmts
 ;
 
@@ -78,9 +77,6 @@ stmt:
 		cout << "add pipe to bar" << endl;
 		addToLine("|");
 		addToLine($2);
-		// runPipeBar($2);
-		// addToLine($2);
-		// built = true;
 	}
 	| OUTPUT_REDIRECT STRING{
 		//runPipeGreater($2);
@@ -93,6 +89,21 @@ stmt:
 		// built = true;
 	}
 	| END{
+		addToCommandTable();
+		runCommandTable();
+	}
+;
+      
+%%
+void clearCommandPlusArg(){
+	cmd.clear();
+}
+void clearCurrCommand(){
+	currCommand.command.clear();
+	currCommand.args.clear();
+}
+
+void addToCommandTable(){
 		// if(built == false){
 		// 	runNotBuilt(); 
 		// }
@@ -166,23 +177,11 @@ stmt:
 			}
 		}
 		clearExpression(); 
-		return 1;
-	}
-;
-      
-%%
-void clearCommandPlusArg(){
-	cmd.clear();
-}
-void clearCurrCommand(){
-	currCommand.command.clear();
-	currCommand.args.clear();
 }
 
 void runPipeBar(string token){
 	
 }
-void runCommandTable(){
 	//input
 	// arg
     // for elem in commtable:
@@ -192,7 +191,7 @@ void runCommandTable(){
 	
 
 
-}
+
 
 /*void addToLine(char* token){
 	printf("hello");
@@ -226,13 +225,11 @@ char *convert(const string & s)
    return pc; 
 }
 
-int runNotBuilt(){
+int runNotBuilt(string command, vector<string> args){
 	//printf("%s\n",expression[0]);
-	char* arguments[expr_index];
-	
+	char* arguments[args.size()+1];
 	string binPath = "/bin/";
-	int argLength = expression[0].length();
-    binPath.append(expression[0]);
+    binPath.append(command);
 
 	char *c_binPath = (char*)binPath.c_str();
 
@@ -240,8 +237,8 @@ int runNotBuilt(){
 	arguments[0] = c_binPath;
 	//int j = 0;
 	
-	for(int i = 1; i < expr_index; i++){
-		arguments[i] = (char* )expression[i].c_str();
+	for(int i = 1; i < args.size(); i++){
+		arguments[i] = (char* )args[i].c_str();
 		//j++;
 	}
 	
@@ -250,8 +247,6 @@ int runNotBuilt(){
 	}
 
 	//transform(arguments.begin(), arguments.end(), back_inserter(arguments), convert);   
-
-	arguments[expr_index] = NULL;
 	
 	int pid = fork();
 	if (pid == -1){
@@ -389,6 +384,68 @@ int runUnalias(char *name){
 	}
 	aliasIndex--;
 	return 1;
+}
+
+void runCommandTable(){
+	vector<string> builtCommands{"cd", "alias", "setenv", "printenv", "unsetenv", "unalias"};
+
+	for(int i = 0; i < commandTable.commands.size(); i++){
+		cout << "This is command "<< i << " "<< commandTable.commands[i].command << endl;
+		cout << "This is the size of args " << " " << commandTable.commands[i].args.size() << endl;
+		// Check if it is unbuilt or built
+		if(commandTable.commands[i].command == builtCommands[0]){
+			string argument = commandTable.commands[i].args[0];
+			char *c_arg = (char*)argument.c_str();
+			runCD(c_arg);
+		}
+		else if(commandTable.commands[i].command == builtCommands[1]){
+			if(commandTable.commands[i].args.size() == 0){
+				printAlias();
+			}
+			else if(commandTable.commands[i].args.size() == 2){
+				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+				char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
+				runSetAlias(c_argument0, c_argument1);
+			}
+		}
+		else if(commandTable.commands[i].command == builtCommands[2]){
+			if(commandTable.commands[i].args.size() == 2){
+				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+				char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
+				runSetenv(c_argument0, c_argument1);
+			}
+		}
+		else if(commandTable.commands[i].command == builtCommands[3]){
+			if(commandTable.commands[i].args.size() == 0){
+				printenv();
+			}
+			//printenv
+		}
+		else if(commandTable.commands[i].command == builtCommands[4]){
+			if(commandTable.commands[i].args.size() == 1){
+				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+				unsetenv(c_argument0);
+			}
+			//unsetenv
+		}
+		else if(commandTable.commands[i].command == builtCommands[5]){
+			if(commandTable.commands[i].args.size() == 1){
+				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+				runUnalias(c_argument0);
+			}
+			//unalias
+		}
+		else{
+			runNotBuilt(commandTable.commands[i].command, commandTable.commands[i].args);
+		}
+
+
+		
+		for (int j = 0; j < commandTable.commands[i].args.size(); j++){
+			cout << "This is arg " << j << " "<<  commandTable.commands[i].args[j] << endl;
+			}
+	}
+
 }
 
 /*stmts:
