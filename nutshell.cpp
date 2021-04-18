@@ -13,6 +13,43 @@ using namespace std;
 char *getcwd(char *buf, size_t size);
 int yyparse();
 
+int runNotBuilt(string command, vector<string> args){
+	//printf("%s\n",expression[0]);
+	string binPath = "/bin/";
+
+    binPath.append(command);
+	char *c_binPath = (char*)binPath.c_str();
+
+	char **argv = new char* [args.size()+2];
+    argv[0] = c_binPath;         
+    for (int j = 0;  j < args.size()+1;  ++j){
+		argv[j+1] = (char*) args[j].c_str();
+	}  
+    argv[args.size()+1] = NULL;
+
+
+
+
+	//int j = 0;
+	cout <<"This is the expr_index: " << expr_index << endl;
+	cout << "This is the args size: " << args.size() << endl;
+ 
+	
+	int pid = fork();
+	if (pid == -1){
+		cout << "Error in forking" << endl;
+	}else if(pid ==0){
+		execv(c_binPath, argv);
+	}
+
+	return 1;
+}
+
+int runCommandTable(){
+	runNotBuilt(commandTable.commands[commandTable.commands.size()-1].command, commandTable.commands[commandTable.commands.size()-1].args);
+
+	return 1;
+}
 int main()
 {
     int aliasIndex = 0;
@@ -52,8 +89,9 @@ int main()
     system("clear");
     while(1)
     {
-        cout << varTable.word[2] << endl;;
+        cout <<"["<< varTable.word[2] <<"]"<< endl;;
         yyparse();
+       // runCommandTable();
     }
 
    return 0;

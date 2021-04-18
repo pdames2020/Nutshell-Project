@@ -518,8 +518,8 @@ bool ifAlias(char* name){
 
 
 bool isStart(char* name){
-	cout << "Name" << name << endl;
-	cout << "First toke: " << expression[0] << endl;
+	cout << "Name " << name << endl;
+	cout << "First token: " << expression[0] << endl;
 
     if(expression[0] == name){
         return true;
@@ -836,7 +836,7 @@ YY_RULE_SETUP
 case 6:
 YY_RULE_SETUP
 #line 75 "nutshscanner.l"
-{return ALIAS; }
+{ return ALIAS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
@@ -882,15 +882,15 @@ YY_RULE_SETUP
 case 15:
 YY_RULE_SETUP
 #line 84 "nutshscanner.l"
-{if(ifAlias(yytext)) {
-                        cout << "yytext: " << yytext << endl;
+{if(ifAlias(yytext) && isStart(yytext)) {
+                        printf("yytext: %s\n", yytext);
                         //source: https://www.cs.princeton.edu/~appel/modern/c/software/flex/flex.html
                            char *yycopy = strdup( subAliases(yytext) );
                            for ( int i = strlen(subAliases(yytext)) - 1; i >= 0; --i )
                                unput( yycopy[i] );
                            free( yycopy );
                     } else {
-                        cout << "yytext: " << yytext << endl;
+                        printf("yytext: %s\n", yytext);
                         yylval.string = strdup(yytext);
                         return STRING;
                     };
@@ -898,7 +898,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 97 "nutshscanner.l"
+#line 98 "nutshscanner.l"
 ECHO;
 	YY_BREAK
 #line 905 "lex.yy.c"
@@ -1907,5 +1907,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 97 "nutshscanner.l"
+#line 98 "nutshscanner.l"
 

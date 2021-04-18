@@ -93,7 +93,7 @@ void addToLine(string token);
 void runPipeBar(char* token);
 void runPipeLesser(char* token);
 void runPipeGreater(char* token);
-void runCommandTable();
+int runCommandTable();
 void clearCommandPlusArg();
 void clearCurrCommand();
 void addToCommandTable();
@@ -111,12 +111,10 @@ struct Command currCommand;
 struct Pipeline commandTable;
 vector<string> expression;
 vector<string> cmd; 
-vector<string> cmdTblCom;
-vector<string> cmdTblArg;
 char* subAliases(char* name);
 bool built;
 
-#line 120 "nutshparser.tab.c"
+#line 118 "nutshparser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -184,10 +182,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 51 "nutshparser.y"
+#line 49 "nutshparser.y"
 char *string;
 
-#line 191 "nutshparser.tab.c"
+#line 189 "nutshparser.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -564,8 +562,8 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    59,    59,    60,    61,    62,    63,    64,    65,    66,
-      67,    71,    72,    75,    78,    83,    88,    93
+       0,    57,    57,    58,    59,    60,    61,    62,    63,    64,
+      65,    69,    70,    73,    76,    81,    86,    91
 };
 #endif
 
@@ -605,7 +603,7 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,     2,    12,    -4,     9,    -4,    13,    17,    14,    15,
+      -3,     2,    12,    -4,     9,    -4,    13,    17,     7,    15,
       20,    21,    22,    28,    -4,     8,    -4,    23,    24,    -4,
       26,    -4,    25,    27,    -4,    -4,    -4,    -4,    -4,    -4,
       29,    30,    -4,    -4,    -4,    -4
@@ -648,7 +646,7 @@ static const yytype_int8 yytable[] =
 static const yytype_int8 yycheck[] =
 {
        3,     4,     5,     6,     7,     8,     9,    10,    11,     7,
-      13,    14,    15,     5,     5,     7,     7,     5,     5,     5,
+      13,    14,    15,     5,     5,     7,     7,     5,     5,    12,
        5,    13,    14,    15,     7,     5,     5,     5,     0,     5,
        7,     5,     7,    15,     7,    -1,     7,     7
 };
@@ -659,7 +657,7 @@ static const yytype_int8 yystos[] =
 {
        0,     3,     4,     5,     6,     7,     8,     9,    10,    11,
       13,    14,    15,    17,    18,    19,     7,     5,     5,     7,
-       5,     7,     5,     5,     5,     5,     5,     0,    18,     7,
+       5,     7,    12,     5,     5,     5,     5,     0,    18,     7,
        5,     5,     7,     7,     7,     7
 };
 
@@ -1370,102 +1368,102 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 59 "nutshparser.y"
-                                                {exit(1); addToCommandTable(); return 1; }
-#line 1376 "nutshparser.tab.c"
+#line 57 "nutshparser.y"
+                                                {exit(1); return 1; }
+#line 1374 "nutshparser.tab.c"
     break;
 
   case 3:
-#line 60 "nutshparser.y"
-                                                {addToLine("cd"); addToLine((yyvsp[-1].string)); addToCommandTable(); runCommandTable(); return 1;}
-#line 1382 "nutshparser.tab.c"
+#line 58 "nutshparser.y"
+                                                {runCD((yyvsp[-1].string)); return 1;}
+#line 1380 "nutshparser.tab.c"
     break;
 
   case 4:
-#line 61 "nutshparser.y"
-                                                {addToLine("alias"); addToLine((yyvsp[-2].string)); addToLine((yyvsp[-1].string)); addToCommandTable(); runCommandTable(); return 1;}
-#line 1388 "nutshparser.tab.c"
+#line 59 "nutshparser.y"
+                                                {clearExpression(); runSetAlias((yyvsp[-2].string), (yyvsp[-1].string)); return 1;}
+#line 1386 "nutshparser.tab.c"
     break;
 
   case 5:
-#line 62 "nutshparser.y"
-                                        {addToLine("alias"); addToCommandTable(); runCommandTable() return 1;}
-#line 1394 "nutshparser.tab.c"
+#line 60 "nutshparser.y"
+                                        {printAlias(); return 1;}
+#line 1392 "nutshparser.tab.c"
     break;
 
   case 6:
-#line 63 "nutshparser.y"
-                                    {addToLine("setenv"); addToLine((yyvsp[-2].string)); addToLine((yyvsp[-1].string)); addToCommandTable(); runCommandTable(); return 1;}
-#line 1400 "nutshparser.tab.c"
+#line 61 "nutshparser.y"
+                                    {runSetenv((yyvsp[-2].string), (yyvsp[-1].string)); return 1;}
+#line 1398 "nutshparser.tab.c"
     break;
 
   case 7:
-#line 64 "nutshparser.y"
-                                        {addToLine("printenv"); addToCommandTable(); runCommandTable(); return 1;}
-#line 1406 "nutshparser.tab.c"
+#line 62 "nutshparser.y"
+                                        {printenv(); return 1;}
+#line 1404 "nutshparser.tab.c"
     break;
 
   case 8:
-#line 65 "nutshparser.y"
-                                        {addToLine("unsetenv"); addToLine((yyvsp[-1].string)); addToCommandTable(); runCommandTable(); return 1;}
-#line 1412 "nutshparser.tab.c"
+#line 63 "nutshparser.y"
+                                        {unsetenv((yyvsp[-1].string)); return 1;}
+#line 1410 "nutshparser.tab.c"
     break;
 
   case 9:
-#line 66 "nutshparser.y"
-                                        {addToLine("unalias"); addToLine((yyvsp[-1].string)); addToCommandTable(); runCommandTable(); return 1;}
-#line 1418 "nutshparser.tab.c"
+#line 64 "nutshparser.y"
+                                        {runUnalias((yyvsp[-1].string)); return 1;}
+#line 1416 "nutshparser.tab.c"
     break;
 
   case 13:
-#line 75 "nutshparser.y"
+#line 73 "nutshparser.y"
               {
 		addToLine((yyvsp[0].string));
 	}
-#line 1426 "nutshparser.tab.c"
+#line 1424 "nutshparser.tab.c"
     break;
 
   case 14:
-#line 78 "nutshparser.y"
+#line 76 "nutshparser.y"
                          {
 		cout << "add pipe to bar" << endl;
 		addToLine("|");
 		addToLine((yyvsp[0].string));
 	}
-#line 1436 "nutshparser.tab.c"
+#line 1434 "nutshparser.tab.c"
     break;
 
   case 15:
-#line 83 "nutshparser.y"
+#line 81 "nutshparser.y"
                                 {
 		//runPipeGreater($2);
 		// addToLine($2);
 		// built = true;
 	}
-#line 1446 "nutshparser.tab.c"
+#line 1444 "nutshparser.tab.c"
     break;
 
   case 16:
-#line 88 "nutshparser.y"
+#line 86 "nutshparser.y"
                                {
 		//runPipeLesser($2);
 		// addToLine($2);
 		// built = true;
 	}
-#line 1456 "nutshparser.tab.c"
+#line 1454 "nutshparser.tab.c"
     break;
 
   case 17:
-#line 93 "nutshparser.y"
+#line 91 "nutshparser.y"
              {
 		addToCommandTable();
 		runCommandTable();
 	}
-#line 1465 "nutshparser.tab.c"
+#line 1463 "nutshparser.tab.c"
     break;
 
 
-#line 1469 "nutshparser.tab.c"
+#line 1467 "nutshparser.tab.c"
 
       default: break;
     }
@@ -1697,7 +1695,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 99 "nutshparser.y"
+#line 97 "nutshparser.y"
 
 void clearCommandPlusArg(){
 	cmd.clear();
@@ -1829,38 +1827,6 @@ char *convert(const string & s)
    return pc; 
 }
 
-int runNotBuilt(string command, vector<string> args){
-	//printf("%s\n",expression[0]);
-	char* arguments[args.size()+1];
-	string binPath = "/bin/";
-    binPath.append(command);
-
-	char *c_binPath = (char*)binPath.c_str();
-
-	
-	arguments[0] = c_binPath;
-	//int j = 0;
-	
-	for(int i = 1; i < args.size(); i++){
-		arguments[i] = (char* )args[i].c_str();
-		//j++;
-	}
-	
-	for(int i = 0; i < expr_index; i++){
-		cout << "Argument: "<< i << " " << arguments[i] << endl;
-	}
-
-	//transform(arguments.begin(), arguments.end(), back_inserter(arguments), convert);   
-	
-	int pid = fork();
-	if (pid == -1){
-		cout << "Error in forking" << endl;
-	}else if(pid ==0){
-		execv(c_binPath, arguments);
-	}
-
-	return 1;
-}
 
 int yyerror(char *s) {
   cout << s << endl;
@@ -1875,6 +1841,10 @@ void clearExpression(){
 
 
 int runCD(char* arg) {
+	clearExpression();
+	addToLine("cd");
+	addToLine(arg);
+
 	//expr_index = 0;
 	if (arg[0] != '/') { // arg is relative path
 		strcat(varTable.word[0], "/");
@@ -1905,9 +1875,10 @@ int runCD(char* arg) {
 }
 
 int runSetAlias(char *name, char *word) {
-	// Tokenize name: alias a b
-	//Tokenized = ['alias', 'a', 'b']
-	// Check if (name == Tokenized
+	clearExpression();
+	addToLine("alias");
+	addToLine(name);
+	addToLine(word);
 
 	for (int i = 0; i < aliasIndex; i++) {
 		if(strcmp(name, word) == 0){
@@ -1931,6 +1902,8 @@ int runSetAlias(char *name, char *word) {
 }
 
 int printAlias(){
+	clearExpression();
+	addToLine("alias");
 	for(int i = 0; i < aliasIndex; i++){
 		cout << aliasTable.name[i] << "=" << aliasTable.word[i] << endl;
 	}
@@ -1938,6 +1911,10 @@ int printAlias(){
 }
 
 int runSetenv(char *variable, char *word) {
+	clearExpression();
+	addToLine("setenv");
+	addToLine(variable);
+	addToLine(word);
 
 	for (int i = 0; i < varIndex; i++) {
 		if(strcmp(variable, word) == 0){
@@ -1962,6 +1939,8 @@ int runSetenv(char *variable, char *word) {
 }
 
 int printenv(){
+	clearExpression();
+	addToLine("printenv");
 	for(int i = 0; i < varIndex; i++){
 		cout << varTable.var[i] << " = "<< varTable.word[i]  << endl;
 	}
@@ -1969,6 +1948,9 @@ int printenv(){
 }	
 
 int runUnalias(char *name){
+	clearExpression();
+	addToLine("unalias");
+	addToLine(name);
 	int removeIndex = -1;
 	for(int i = 0; i < aliasIndex; i++){
 		cout << name << endl;
@@ -1990,67 +1972,75 @@ int runUnalias(char *name){
 	return 1;
 }
 
-void runCommandTable(){
-	vector<string> builtCommands{"cd", "alias", "setenv", "printenv", "unsetenv", "unalias"};
+// int runCommandTable(){
+	
+//     // vector<string> builtCommands;
+// 	// builtCommands.push_back("cd");
+// 	// builtCommands.push_back("alias");
+// 	// builtCommands.push_back("setenv");
+// 	// builtCommands.push_back("printenv");
+// 	// builtCommands.push_back("unsetenv");
+// 	// builtCommands.push_back("unalias");
 
-	for(int i = 0; i < commandTable.commands.size(); i++){
-		cout << "This is command "<< i << " "<< commandTable.commands[i].command << endl;
-		cout << "This is the size of args " << " " << commandTable.commands[i].args.size() << endl;
-		// Check if it is unbuilt or built
-		if(commandTable.commands[i].command == builtCommands[0]){
-			string argument = commandTable.commands[i].args[0];
-			char *c_arg = (char*)argument.c_str();
-			runCD(c_arg);
-		}
-		else if(commandTable.commands[i].command == builtCommands[1]){
-			if(commandTable.commands[i].args.size() == 0){
-				printAlias();
-			}
-			else if(commandTable.commands[i].args.size() == 2){
-				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
-				char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
-				runSetAlias(c_argument0, c_argument1);
-			}
-		}
-		else if(commandTable.commands[i].command == builtCommands[2]){
-			if(commandTable.commands[i].args.size() == 2){
-				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
-				char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
-				runSetenv(c_argument0, c_argument1);
-			}
-		}
-		else if(commandTable.commands[i].command == builtCommands[3]){
-			if(commandTable.commands[i].args.size() == 0){
-				printenv();
-			}
-			//printenv
-		}
-		else if(commandTable.commands[i].command == builtCommands[4]){
-			if(commandTable.commands[i].args.size() == 1){
-				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
-				unsetenv(c_argument0);
-			}
-			//unsetenv
-		}
-		else if(commandTable.commands[i].command == builtCommands[5]){
-			if(commandTable.commands[i].args.size() == 1){
-				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
-				runUnalias(c_argument0);
-			}
-			//unalias
-		}
-		else{
-			runNotBuilt(commandTable.commands[i].command, commandTable.commands[i].args);
-		}
+// 	// for(int i = 0; i < commandTable.commands.size(); i++){
+// 	// 	cout << "This is command "<< i << " "<< commandTable.commands[i].command << endl;
+// 	// 	cout << "This is the size of args " << " " << commandTable.commands[i].args.size() << endl;
+// 	// 	// Check if it is unbuilt or built
+// 	// 	if(commandTable.commands[i].command == builtCommands[0]){
+// 	// 		string argument = commandTable.commands[i].args[0];
+// 	// 		char *c_arg = (char*)argument.c_str();
+// 	// 		cout << "This is the argument: " << c_arg << endl;
+// 	// 		runCD(c_arg);
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[1]){
+// 	// 		if(commandTable.commands[i].args.size() == 0){
+// 	// 			printAlias();
+// 	// 		}
+// 	// 		else if(commandTable.commands[i].args.size() == 2){
+// 	// 			char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+// 	// 			char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
+// 	// 			runSetAlias(c_argument0, c_argument1);
+// 	// 		}
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[2]){
+// 	// 		if(commandTable.commands[i].args.size() == 2){
+// 	// 			char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+// 	// 			char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
+// 	// 			runSetenv(c_argument0, c_argument1);
+// 	// 		}
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[3]){
+// 	// 		if(commandTable.commands[i].args.size() == 0){
+// 	// 			printenv();
+// 	// 		}
+// 	// 		//printenv
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[4]){
+// 	// 		if(commandTable.commands[i].args.size() == 1){
+// 	// 			char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+// 	// 			unsetenv(c_argument0);
+// 	// 		}
+// 	// 		//unsetenv
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[5]){
+// 	// 		if(commandTable.commands[i].args.size() == 1){
+// 	// 			char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+// 	// 			runUnalias(c_argument0);
+// 	// 		}
+// 	// 		//unalias
+// 	// 	}
+// 	// 	else{
+// 	// 		runNotBuilt(commandTable.commands[i].command, commandTable.commands[i].args);
+// 	// 	}
 
 
-		
-		for (int j = 0; j < commandTable.commands[i].args.size(); j++){
-			cout << "This is arg " << j << " "<<  commandTable.commands[i].args[j] << endl;
-			}
-	}
+// 	runNotBuilt(commandTable.commands[commands.size()-1].command, commandTable.commands[commands.size()-1].args);
+// 	for (int j = 0; j < commandTable.commands[i].args.size(); j++){
+// 		cout << "This is arg " << j << " "<<  commandTable.commands[i].args[j] << endl;
+// 	}	
+// 	return 1;
 
-}
+// }
 
 /*stmts:
 	| stmt stmts

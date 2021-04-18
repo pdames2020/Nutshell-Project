@@ -24,7 +24,7 @@ void addToLine(string token);
 void runPipeBar(char* token);
 void runPipeLesser(char* token);
 void runPipeGreater(char* token);
-void runCommandTable();
+int runCommandTable();
 void clearCommandPlusArg();
 void clearCurrCommand();
 void addToCommandTable();
@@ -54,14 +54,14 @@ bool built;
 %%
 
 cmd_line    :
-	BYE END 		                {exit(1); addToCommandTable(); return 1; }
-	| CD STRING END        			{addToLine("cd"); addToLine($2); addToCommandTable(); runCommandTable(); return 1;}
-	| ALIAS STRING STRING END		{addToLine("alias"); addToLine($2); addToLine($3); addToCommandTable(); runCommandTable(); return 1;}
-	| ALIAS END                     {addToLine("alias"); addToCommandTable(); runCommandTable() return 1;}
-    | SETENV STRING STRING END      {addToLine("setenv"); addToLine($2); addToLine($3); addToCommandTable(); runCommandTable(); return 1;} 
-	| PRINTENV END                  {addToLine("printenv"); addToCommandTable(); runCommandTable(); return 1;}
-	| UNSETENV STRING END           {addToLine("unsetenv"); addToLine($2); addToCommandTable(); runCommandTable(); return 1;}
-	| UNALIAS STRING END            {addToLine("unalias"); addToLine($2); addToCommandTable(); runCommandTable(); return 1;}
+	BYE END 		                {exit(1); return 1; }
+	| CD STRING END        			{runCD($2); return 1;}
+	| ALIAS STRING STRING END		{clearExpression(); runSetAlias($2, $3); return 1;}
+	| ALIAS END                     {printAlias(); return 1;}
+    | SETENV STRING STRING END      {runSetenv($2, $3); return 1;} 
+	| PRINTENV END                  {printenv(); return 1;}
+	| UNSETENV VARIABLE END         {unsetenv($2); return 1;}
+	| UNALIAS STRING END            {runUnalias($2); return 1;}
 	| stmts
 ;
 
@@ -225,38 +225,6 @@ char *convert(const string & s)
    return pc; 
 }
 
-int runNotBuilt(string command, vector<string> args){
-	//printf("%s\n",expression[0]);
-	char* arguments[args.size()+1];
-	string binPath = "/bin/";
-    binPath.append(command);
-
-	char *c_binPath = (char*)binPath.c_str();
-
-	
-	arguments[0] = c_binPath;
-	//int j = 0;
-	
-	for(int i = 1; i < args.size(); i++){
-		arguments[i] = (char* )args[i].c_str();
-		//j++;
-	}
-	
-	for(int i = 0; i < expr_index; i++){
-		cout << "Argument: "<< i << " " << arguments[i] << endl;
-	}
-
-	//transform(arguments.begin(), arguments.end(), back_inserter(arguments), convert);   
-	
-	int pid = fork();
-	if (pid == -1){
-		cout << "Error in forking" << endl;
-	}else if(pid ==0){
-		execv(c_binPath, arguments);
-	}
-
-	return 1;
-}
 
 int yyerror(char *s) {
   cout << s << endl;
@@ -271,6 +239,10 @@ void clearExpression(){
 
 
 int runCD(char* arg) {
+	clearExpression();
+	addToLine("cd");
+	addToLine(arg);
+
 	//expr_index = 0;
 	if (arg[0] != '/') { // arg is relative path
 		strcat(varTable.word[0], "/");
@@ -301,9 +273,10 @@ int runCD(char* arg) {
 }
 
 int runSetAlias(char *name, char *word) {
-	// Tokenize name: alias a b
-	//Tokenized = ['alias', 'a', 'b']
-	// Check if (name == Tokenized
+	clearExpression();
+	addToLine("alias");
+	addToLine(name);
+	addToLine(word);
 
 	for (int i = 0; i < aliasIndex; i++) {
 		if(strcmp(name, word) == 0){
@@ -327,6 +300,8 @@ int runSetAlias(char *name, char *word) {
 }
 
 int printAlias(){
+	clearExpression();
+	addToLine("alias");
 	for(int i = 0; i < aliasIndex; i++){
 		cout << aliasTable.name[i] << "=" << aliasTable.word[i] << endl;
 	}
@@ -334,6 +309,10 @@ int printAlias(){
 }
 
 int runSetenv(char *variable, char *word) {
+	clearExpression();
+	addToLine("setenv");
+	addToLine(variable);
+	addToLine(word);
 
 	for (int i = 0; i < varIndex; i++) {
 		if(strcmp(variable, word) == 0){
@@ -358,6 +337,8 @@ int runSetenv(char *variable, char *word) {
 }
 
 int printenv(){
+	clearExpression();
+	addToLine("printenv");
 	for(int i = 0; i < varIndex; i++){
 		cout << varTable.var[i] << " = "<< varTable.word[i]  << endl;
 	}
@@ -365,6 +346,9 @@ int printenv(){
 }	
 
 int runUnalias(char *name){
+	clearExpression();
+	addToLine("unalias");
+	addToLine(name);
 	int removeIndex = -1;
 	for(int i = 0; i < aliasIndex; i++){
 		cout << name << endl;
@@ -386,67 +370,75 @@ int runUnalias(char *name){
 	return 1;
 }
 
-void runCommandTable(){
-	vector<string> builtCommands{"cd", "alias", "setenv", "printenv", "unsetenv", "unalias"};
+// int runCommandTable(){
+	
+//     // vector<string> builtCommands;
+// 	// builtCommands.push_back("cd");
+// 	// builtCommands.push_back("alias");
+// 	// builtCommands.push_back("setenv");
+// 	// builtCommands.push_back("printenv");
+// 	// builtCommands.push_back("unsetenv");
+// 	// builtCommands.push_back("unalias");
 
-	for(int i = 0; i < commandTable.commands.size(); i++){
-		cout << "This is command "<< i << " "<< commandTable.commands[i].command << endl;
-		cout << "This is the size of args " << " " << commandTable.commands[i].args.size() << endl;
-		// Check if it is unbuilt or built
-		if(commandTable.commands[i].command == builtCommands[0]){
-			string argument = commandTable.commands[i].args[0];
-			char *c_arg = (char*)argument.c_str();
-			runCD(c_arg);
-		}
-		else if(commandTable.commands[i].command == builtCommands[1]){
-			if(commandTable.commands[i].args.size() == 0){
-				printAlias();
-			}
-			else if(commandTable.commands[i].args.size() == 2){
-				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
-				char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
-				runSetAlias(c_argument0, c_argument1);
-			}
-		}
-		else if(commandTable.commands[i].command == builtCommands[2]){
-			if(commandTable.commands[i].args.size() == 2){
-				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
-				char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
-				runSetenv(c_argument0, c_argument1);
-			}
-		}
-		else if(commandTable.commands[i].command == builtCommands[3]){
-			if(commandTable.commands[i].args.size() == 0){
-				printenv();
-			}
-			//printenv
-		}
-		else if(commandTable.commands[i].command == builtCommands[4]){
-			if(commandTable.commands[i].args.size() == 1){
-				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
-				unsetenv(c_argument0);
-			}
-			//unsetenv
-		}
-		else if(commandTable.commands[i].command == builtCommands[5]){
-			if(commandTable.commands[i].args.size() == 1){
-				char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
-				runUnalias(c_argument0);
-			}
-			//unalias
-		}
-		else{
-			runNotBuilt(commandTable.commands[i].command, commandTable.commands[i].args);
-		}
+// 	// for(int i = 0; i < commandTable.commands.size(); i++){
+// 	// 	cout << "This is command "<< i << " "<< commandTable.commands[i].command << endl;
+// 	// 	cout << "This is the size of args " << " " << commandTable.commands[i].args.size() << endl;
+// 	// 	// Check if it is unbuilt or built
+// 	// 	if(commandTable.commands[i].command == builtCommands[0]){
+// 	// 		string argument = commandTable.commands[i].args[0];
+// 	// 		char *c_arg = (char*)argument.c_str();
+// 	// 		cout << "This is the argument: " << c_arg << endl;
+// 	// 		runCD(c_arg);
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[1]){
+// 	// 		if(commandTable.commands[i].args.size() == 0){
+// 	// 			printAlias();
+// 	// 		}
+// 	// 		else if(commandTable.commands[i].args.size() == 2){
+// 	// 			char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+// 	// 			char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
+// 	// 			runSetAlias(c_argument0, c_argument1);
+// 	// 		}
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[2]){
+// 	// 		if(commandTable.commands[i].args.size() == 2){
+// 	// 			char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+// 	// 			char* c_argument1 = (char*) commandTable.commands[i].args[1].c_str();
+// 	// 			runSetenv(c_argument0, c_argument1);
+// 	// 		}
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[3]){
+// 	// 		if(commandTable.commands[i].args.size() == 0){
+// 	// 			printenv();
+// 	// 		}
+// 	// 		//printenv
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[4]){
+// 	// 		if(commandTable.commands[i].args.size() == 1){
+// 	// 			char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+// 	// 			unsetenv(c_argument0);
+// 	// 		}
+// 	// 		//unsetenv
+// 	// 	}
+// 	// 	else if(commandTable.commands[i].command == builtCommands[5]){
+// 	// 		if(commandTable.commands[i].args.size() == 1){
+// 	// 			char* c_argument0 = (char*) commandTable.commands[i].args[0].c_str();
+// 	// 			runUnalias(c_argument0);
+// 	// 		}
+// 	// 		//unalias
+// 	// 	}
+// 	// 	else{
+// 	// 		runNotBuilt(commandTable.commands[i].command, commandTable.commands[i].args);
+// 	// 	}
 
 
-		
-		for (int j = 0; j < commandTable.commands[i].args.size(); j++){
-			cout << "This is arg " << j << " "<<  commandTable.commands[i].args[j] << endl;
-			}
-	}
+// 	runNotBuilt(commandTable.commands[commands.size()-1].command, commandTable.commands[commands.size()-1].args);
+// 	for (int j = 0; j < commandTable.commands[i].args.size(); j++){
+// 		cout << "This is arg " << j << " "<<  commandTable.commands[i].args[j] << endl;
+// 	}	
+// 	return 1;
 
-}
+// }
 
 /*stmts:
 	| stmt stmts
